@@ -52,10 +52,12 @@ app.get('/authrequired', ensureAuthenticated, (req, res) =>{
   res.send('Auth endpoint reached!');
 });
 
-// tell the server what port to listen on
-models.sequelize.sync().then(function(){
-  app.listen(3000, () => {
-    console.log('Listening on localhost:3000')
-  });
-});
+// // tell the server what port to listen on
+// models.sequelize.sync().then(function(){
+//   app.listen(3000, () => {
+//     console.log('Listening on localhost:3000')
+//   });
+// });
+
+module.exports = app;
 

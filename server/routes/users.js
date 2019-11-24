@@ -11,14 +11,22 @@ router.post('/register', (req, res)=>{
     const { name, email, password, password2 } = req.body;
     let errors = [];
 
+
+    
     //check required fields
-    if(!name || !email || !password || !password2){
+    if(!name || !email || !password || !password2
+        ||  name == undefined || email == undefined || password == undefined || password2 == undefined) {
         errors.push('Please fill in all fields.');
+        return res.status(400).send({
+            message: errors
+        });
     }
     
+    console.log(password);
     //check passwords match
     if(password !== password2){
         errors.push('Passwords do not match.');
+        
     }
 
     //check pass length
@@ -63,11 +71,11 @@ router.post('/register', (req, res)=>{
 
 router.post('/login', (req, res, next) => {
 passport.authenticate('local', (err, user, info) => {
-    if(info) {
-        return res.send(info.message)
-    }
     if (err) {
          return next(err); 
+    }
+    if(!user){
+        return res.status(400).send(info.message)
     }
     req.login(user, (err) => {
         if (err) {
