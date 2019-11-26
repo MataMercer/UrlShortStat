@@ -39,8 +39,8 @@ mySessionStore.sync();
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/api/users', require('./routes/users'));
-
+app.use('/api/user', require('./routes/users'));
+app.use('/api/url', require('./routes/urls'));
 // create the homepage route at '/'
 app.get('/', (req, res) => {
   res.send(`You got home page!\n`)
@@ -51,6 +51,7 @@ const {ensureAuthenticated} = require('./auth/auth');
 app.get('/authrequired', ensureAuthenticated, (req, res) =>{
   res.send('Auth endpoint reached!');
 });
+
 
 // // tell the server what port to listen on
 // models.sequelize.sync().then(function(){

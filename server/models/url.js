@@ -2,10 +2,18 @@
 module.exports = (sequelize, DataTypes) => {
   const Url = sequelize.define('Url', {
     originalUrl: DataTypes.STRING,
-    urlCode: DataTypes.STRING
+    urlCode: {
+      type: DataTypes.STRING,
+      primaryKey: true
+    }
   }, {});
   Url.associate = function(models) {
-    // associations can be defined here
+    models.Url.belongsTo(models.User, {
+      onDelete: "CASCADE",
+      foreignKey: {
+        allowNull: false
+      }
+    });
   };
   return Url;
 };

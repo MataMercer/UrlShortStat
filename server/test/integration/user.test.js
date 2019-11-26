@@ -33,7 +33,7 @@ describe('Register route', () => {
 
     it('Returns a 200 response with valid input', (done) => {
         chai.request(app)
-            .post('/api/users/register')
+            .post('/api/user/register')
             .type('application/json')
             .send(validUser)
             .end((error, response) => {
@@ -47,7 +47,7 @@ describe('Register route', () => {
         models.User.create(validUser)
         .then(() => {
             chai.request(app)
-            .post('/api/users/register')
+            .post('/api/user/register')
             .type('application/json')
             .send(validUser)
             .end((error, response) => {
@@ -62,7 +62,7 @@ describe('Register route', () => {
         models.User.create(validUser)
         .then(() => {
             chai.request(app)
-            .post('/api/users/register')
+            .post('/api/user/register')
             .type('application/json')
             .send({
                 'email': 'valid@email.com',
@@ -110,13 +110,13 @@ describe('login route', () => {
 
     it('Returns a 200 response with correct password', (done) => {
         chai.request(app)
-            .post('/api/users/register')
+            .post('/api/user/register')
             .type('application/json')
             .send(newUser)
             .end((error, response) => {
                 if (error) done(error);
                 chai.request(app)
-                    .post('/api/users/login')
+                    .post('/api/user/login')
                     .type('application/json')
                     .send(validUser)
                     .end((error1, response1) => {
@@ -130,7 +130,7 @@ describe('login route', () => {
 
     it('Returns a 400 response with for logging in with non-existing account.', (done) => {
         chai.request(app)
-            .post('/api/users/login')
+            .post('/api/user/login')
             .type('application/json')
             .send(validUser)
             .end((error, response) => {
@@ -142,13 +142,13 @@ describe('login route', () => {
 
     it('Returns a 400 response with incorrect password', (done) => {
         chai.request(app)
-            .post('/api/users/register')
+            .post('/api/user/register')
             .type('application/json')
             .send(newUser)
             .end((error, response) => {
                 if (error) done(error);
                 chai.request(app)
-                    .post('/api/users/login')
+                    .post('/api/user/login')
                     .type('application/json')
                     .send(invalidUser)
                     .end((error, response) => {
@@ -198,13 +198,13 @@ describe('logout route', () => {
     it('Returns a 401 response when logging in, logging out, then going to an auth required route.', (done) => {
         let agent = chai.request.agent(app)
         agent
-            .post('/api/users/register')
+            .post('/api/user/register')
             .type('application/json')
             .send(newUser)
             .end((error1, response) => {
                 if (error1) done(error1);
                 agent
-                    .post('/api/users/logout')
+                    .post('/api/user/logout')
                     .type('application/json')
                     .send(validUser)
                     .end((error1, response1) => {

@@ -22,7 +22,6 @@ router.post('/register', (req, res)=>{
         });
     }
     
-    console.log(password);
     //check passwords match
     if(password !== password2){
         errors.push('Passwords do not match.');

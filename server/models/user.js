@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING
   }, {});
   User.associate = function(models) {
-    // associations can be defined here
+    models.User.hasMany(models.Url);
   };
   return User;
 };
