@@ -10,6 +10,7 @@ require('./auth/passport')(passport);
 const SequelizeSessionStore = require('connect-session-sequelize')(session.Store);
 const models = require('./models');
 
+var cors = require('cors');
 
 const mySessionStore = new SequelizeSessionStore({
   db: models.sequelize
@@ -19,6 +20,11 @@ const mySessionStore = new SequelizeSessionStore({
 
 // create the server
 const app = express();
+
+app.use(cors({
+  credentials: true,
+  origin: 'http://localhost:3000'
+}));
 
 // add & configure middleware
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -41,10 +47,16 @@ app.use(passport.session());
 
 app.use('/api/user', require('./routes/users'));
 app.use('/api/url', require('./routes/urls'));
-// create the homepage route at '/'
-app.get('/', (req, res) => {
-  res.send(`You got home page!\n`)
-});
+
+// // Serve static assets if in production
+// if(process.env.NODE_ENV === 'production'){
+//   //Set static folder
+//   app.use(express.static('client/build'));
+
+//   app.get('*', (req, res) => {
+//       res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+//   })
+// }
 
 //test
 const {ensureAuthenticated} = require('./auth/auth');

@@ -1,0 +1,5 @@
+export const USER_LOGIN = 'USER_LOGIN';
+export const USER_REGISTER = 'USER_REGISTER';
+export const USER_LOGOUT = 'USER_LOGOUT';
+export const USER_LOADING = 'USER_LOADING';
+export const USER_CHECK_SESSION = 'USER_CHECK_SESSION';

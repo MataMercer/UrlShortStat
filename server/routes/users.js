@@ -12,11 +12,14 @@ router.post('/register', (req, res)=>{
     let errors = [];
 
 
+
+
     
     //check required fields
     if(!name || !email || !password || !password2
         ||  name == undefined || email == undefined || password == undefined || password2 == undefined) {
         errors.push('Please fill in all fields.');
+        console.log(name);
         return res.status(400).send({
             message: errors
         });
@@ -57,7 +60,11 @@ router.post('/register', (req, res)=>{
                             email,
                             password: hash
                           }).then(function() {
-                            return res.send({message: 'you have successfully registered.'});;
+                            return res.send({
+                                message: 'you have successfully registered.',
+                                email: email,
+                                name: name
+                            });
                           });
                     }));
 
@@ -80,7 +87,11 @@ passport.authenticate('local', (err, user, info) => {
         if (err) {
             return next(err); 
         }
-        return res.send({message: 'you have logged in.'});;
+        return res.send({
+            message: 'you have logged in.',
+            email:user.dataValues.email,
+            name: user.dataValues.name
+        });
     });
 })(req, res, next);
 });
@@ -88,6 +99,15 @@ passport.authenticate('local', (err, user, info) => {
 router.post('/logout', (req, res, next) => {
     req.logout();
     return res.send({message: 'you have logged out.'});;
+});
+
+router.get('/usernameandemail', ensureAuthenticated, (req, res)=> {
+    try {
+        res.send({email: req.user.dataValues.email, name: req.user.dataValues.name});
+      } catch (err) {
+        console.error(err);
+        res.status(500).json('Server error');
+      }
 });
 
 
