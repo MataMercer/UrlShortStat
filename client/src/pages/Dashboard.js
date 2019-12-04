@@ -4,13 +4,15 @@ import {
     Jumbotron,
     Button
 } from 'reactstrap';
+
+import UrlList from '../components/UrlList';
 class Dashboard extends React.Component{
 
 
     render(){
         return(
             <Container>
-            <h3>TOP SECRET</h3>
+            <UrlList/>
             </Container>
         );
     }

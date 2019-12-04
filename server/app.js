@@ -58,6 +58,23 @@ app.use('/api/url', require('./routes/urls'));
 //   })
 // }
 
+//urlshortener
+app.get('/u/:code', async (req, res) => {
+  try {
+    models.Url.findByPk(req.params.code)
+      .then((url)=>{
+          if (url) {
+              return res.redirect(url.dataValues.originalUrl);
+            } else {
+              return res.status(404).json('No url found');
+            }
+      })    
+  } catch (err) {
+    console.error(err);
+    res.status(500).json('Server error');
+  }
+});
+
 //test
 const {ensureAuthenticated} = require('./auth/auth');
 app.get('/authrequired', ensureAuthenticated, (req, res) =>{

@@ -7,30 +7,49 @@ const shortid = require('shortid');
 const config = require('config');
 
 router.post('/create', ensureAuthenticated, async (req, res)=>{
-    const {originalUrl} = req.body;
+    const {originalUrl, customUrl} = req.body;
     // const baseUrl= req.get('host');
     
     if(validUrl.isUri(originalUrl)){
-            console.log(req.user.dataValues.id);
             try{
-                models.Url.findOne({ where: {originalUrl, UserId: req.user.dataValues.id} }).then(url => {
-                    if(url){
-                        return res.status(400).send({
-                        message: 'Invalid url. That url is already registered for this user.'
-                        });
-                    }
-                    else{
-        
-                        models.Url.create({
-                            originalUrl,
-                            urlCode: shortid.generate(),
-                            UserId: req.user.dataValues.id
-                        }).then(function() {
-                            return res.send({message: 'you have successfully registered a new url.'});;
-                        });
-                        
-                    }
-                })
+                if(customUrl){
+                    models.Url.findOne({ where: {urlCode: customUrl}}).then(url => {
+                        if(url){
+                            return res.status(400).send({
+                                message: 'That URL is already taken. Please try again.'
+                            });
+                        }
+                        else{
+                            if(customUrl){
+                                models.Url.create({
+                                    originalUrl,
+                                    urlCode: customUrl,
+                                    UserId: req.user.dataValues.id,
+                                }).then(function() {
+                                    return res.send({message: 'you have successfully registered a new url.'});                               
+                                });
+                            }
+                        }
+                    })
+                }
+                else{
+                    const newUrlCode = shortid.generate();
+                    models.Url.findOne({where:{urlCode: newUrlCode}}).then(url =>{
+                        if(!url){
+                            models.Url.create({
+                                originalUrl,
+                                urlCode: newUrlCode,
+                                UserId: req.user.dataValues.id,
+                            }).then(function() {
+                                return res.send({message: 'you have successfully registered a new url.'});                               
+                            });
+                        }else{
+                            return res.status(500).send({
+                                message: 'Try resubmitting. Server had trouble generating a unique ID.'
+                            });
+                        }
+                    });
+                }
             }
             catch(error){
                 console.log(error)
@@ -43,21 +62,7 @@ router.post('/create', ensureAuthenticated, async (req, res)=>{
 
 });
 
-router.get('/:code', async (req, res) => {
-    try {
-      models.Url.findOne({ where:{urlCode: req.params.code} })
-        .then((url)=>{
-            if (url) {
-                return res.redirect(url.dataValues.originalUrl);
-              } else {
-                return res.status(404).json('No url found');
-              }
-        })    
-    } catch (err) {
-      console.error(err);
-      res.status(500).json('Server error');
-    }
-  });
+
 
 router.get('/', ensureAuthenticated, async(req,res)=>{
     try {
@@ -73,5 +78,23 @@ router.get('/', ensureAuthenticated, async(req,res)=>{
         res.status(500).json('Server error');
       }
 })
+
+router.delete('/:code', ensureAuthenticated, async(req, res) => {
+    try {
+        models.Url.findByPk(req.params.code)
+          .then((url)=>{
+              if (url) {
+                  url.destroy();
+                  return res.json('url deleted');
+                } else {
+                  return res.status(404).json('No url found');
+                }
+          })    
+      } catch (err) {
+        console.error(err);
+        res.status(500).json('Server error');
+      }
+
+});
 
 module.exports = router;

@@ -15,7 +15,6 @@ export const registerUser = (user) => dispatch => {
             })
         })
         .catch(error =>{
-            console.log(error);
             console.log(error.response);
            
             dispatch({
