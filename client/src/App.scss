@@ -1,0 +1,35 @@
+
+$font-stack:    Helvetica, sans-serif;
+$primary-color: #527474;
+
+/* .App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+} */
+.page-content{
+  background-color: white;
+  padding: 3rem;
+}
+
+
+
+.App{
+  background-color: $primary-color;
+  height: 100vh
+}
+
+.App-link {
+  color: #09d3ac;
+}
+
+.navbarLogo{
+  width: 3rem;
+  padding: 0.5rem;
+  border-radius: 30%;
+}

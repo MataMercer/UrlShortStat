@@ -5,7 +5,7 @@ axios.defaults.withCredentials = true;
 
 export const getUrls = () => dispatch => {
     dispatch(setUrlLoading());
-    axios
+    return axios
         .get('http://localhost:5000/api/url')
         .then(res =>{
             dispatch({
@@ -19,13 +19,41 @@ export const getUrls = () => dispatch => {
             dispatch({
                 type: URL_GET
             })
+
+            return error;
         });
 
 }
 
+
+export const createUrl = (url) => dispatch => {
+    dispatch(setUrlLoading());
+    return axios
+        .post('http://localhost:5000/api/url/create', url)
+        .then(res =>{
+            console.log(res.data);
+            dispatch({
+                type: URL_CREATE,
+                payload: res.data
+            })
+        })
+        .catch(error =>{
+            console.log(error.response);
+
+            dispatch({
+                type: URL_CREATE
+            })
+
+            return error;
+        });
+
+}
+
+
+
 export const deleteUrl = (urlCode) => dispatch => {
     // dispatch(setUrlLoading());
-    axios
+    return axios
         .delete(`http://localhost:5000/api/url/${urlCode}`)
         .then(res =>{
             dispatch({
@@ -39,6 +67,8 @@ export const deleteUrl = (urlCode) => dispatch => {
             dispatch({
                 type: URL_DELETE
             })
+
+            return error;
         });
 
 }

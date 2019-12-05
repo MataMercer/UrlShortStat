@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Url = sequelize.define('Url', {
-    originalUrl: DataTypes.STRING,
+    originalUrl: DataTypes.TEXT,
     urlCode: {
       type: DataTypes.STRING,
       primaryKey: true

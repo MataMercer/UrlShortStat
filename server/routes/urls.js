@@ -26,7 +26,7 @@ router.post('/create', ensureAuthenticated, async (req, res)=>{
                                     urlCode: customUrl,
                                     UserId: req.user.dataValues.id,
                                 }).then(function() {
-                                    return res.send({message: 'you have successfully registered a new url.'});                               
+                                    return res.send({message: 'you have successfully registered a new url.', urlCode: customUrl, originalUrl});                               
                                 });
                             }
                         }
@@ -41,7 +41,7 @@ router.post('/create', ensureAuthenticated, async (req, res)=>{
                                 urlCode: newUrlCode,
                                 UserId: req.user.dataValues.id,
                             }).then(function() {
-                                return res.send({message: 'you have successfully registered a new url.'});                               
+                                return res.send({message: 'you have successfully registered a new url.', urlCode: newUrlCode, originalUrl});                               
                             });
                         }else{
                             return res.status(500).send({

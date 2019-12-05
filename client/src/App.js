@@ -1,6 +1,6 @@
 import React from 'react';
 // import logo from './logo.svg';
-// import './App.css';
+import './App.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -9,7 +9,10 @@ import Routes from './routes/Routes';
 import {connect} from 'react-redux';
 
 import {checkUserSession} from './actions/userActions';
-import {Spinner} from 'reactstrap';
+import {Spinner, Container} from 'reactstrap';
+
+import 'axios-progress-bar/dist/nprogress.css'
+import { loadProgressBar } from 'axios-progress-bar'
 
 
 class App extends React.Component{
@@ -19,13 +22,14 @@ class App extends React.Component{
 
   render(){
     return (
-      
+        
         <div className="App">
-          <header className="App-header">
+        {loadProgressBar({ showSpinner: false })}
             <AppNavbar/>
-            {this.props.loading ? <Spinner/> : <Routes/>}
-            
-          </header>
+            {this.props.loading ? 
+              <Spinner/> 
+              : 
+              <Container className="page-content"><Routes/></Container>}
         </div>
     );
   }

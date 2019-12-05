@@ -49,7 +49,11 @@ class Login extends React.Component{
           password: this.state.password,
       }
 
-        this.props.loginUser(user);
+        this.props.loginUser(user).then((error) => {
+          if(error){
+            this.setState({formErrorMessages: [error.response.data]})
+          }
+        });
 
         
 

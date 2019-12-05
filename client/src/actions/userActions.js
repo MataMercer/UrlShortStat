@@ -4,8 +4,8 @@ import {USER_LOGIN, USER_REGISTER, USER_LOGOUT, USER_CHECK_SESSION, USER_LOADING
 axios.defaults.withCredentials = true; 
 
 export const registerUser = (user) => dispatch => {
-    dispatch(setUserLoading());
-    axios
+    // dispatch(setUserLoading());
+    return axios
         .post('http://localhost:5000/api/user/register', user)
         .then(res =>{
             
@@ -15,19 +15,20 @@ export const registerUser = (user) => dispatch => {
             })
         })
         .catch(error =>{
+            
             console.log(error.response);
            
             dispatch({
                 type: USER_REGISTER
             })
-            
+            return error;
         });
 };
 
 export const loginUser = (user) => dispatch => {
-    dispatch(setUserLoading());
+    // dispatch(setUserLoading());
 
-    axios
+    return axios
         .post('http://localhost:5000/api/user/login', user)
         .then(res =>{
             console.log(res.data);
@@ -42,6 +43,8 @@ export const loginUser = (user) => dispatch => {
             dispatch({
                 type: USER_LOGIN
             })
+
+            return error;
             
         });
 }

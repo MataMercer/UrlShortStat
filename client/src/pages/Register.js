@@ -56,7 +56,10 @@ class Register extends React.Component{
         }
 
         //add item via additem action
-        this.props.registerUser(newUser);
+        this.props.registerUser(newUser).then((error)=>{
+            if(error)
+                this.setState({formErrorMessages: error.response.data.message});
+        })
 
         //redir
         // this.props.history.push('/dashboard');

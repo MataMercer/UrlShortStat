@@ -17,7 +17,7 @@ import {
   import {logoutUser} from '../actions/userActions';
   import {connect} from 'react-redux';
  
-  
+  import logo from '../logotiny.png';
 
 class AppNavbar extends React.Component{
     
@@ -25,7 +25,7 @@ class AppNavbar extends React.Component{
     render(){
         const AuthNavbar = withRouter(({ history }) => (
               this.props.name ? (
-              <div>
+              <Nav navbar={true}>
               
               <Link to="/settings">
               <NavItem>
@@ -46,13 +46,15 @@ class AppNavbar extends React.Component{
                         Log out
                       </NavLink>
                 </NavItem>
-              </div>
+              </Nav>
             ) : (
+                <Nav navbar={true}>
                 <Link to="/login">
                     <NavItem>
                         <NavLink>Login</NavLink>
                     </NavItem>
                 </Link>
+                </Nav>
             )
           ));
 
@@ -61,19 +63,20 @@ class AppNavbar extends React.Component{
                 <Navbar color="light" light expand="md">
 
                     <Link to="/">
-                        <NavbarBrand href="/">URLShortStat</NavbarBrand>
+                        <NavbarBrand><img className="navbarLogo" src={logo}></img>URLShortStat</NavbarBrand>
                     </Link>
 
-                    <Nav className="ml-auto" navbar={true}>
+                    <Nav navbar={true}>
                         <Link to="/about">
                             <NavItem>
                                 <NavLink>About</NavLink>
                             </NavItem>
                         </Link>
-                        
-                        <AuthNavbar/>
-                    </Nav>
 
+                        
+                        
+                    </Nav>
+                        <AuthNavbar/>
                 </Navbar>
             
             </div>

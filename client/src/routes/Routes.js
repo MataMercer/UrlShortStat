@@ -6,6 +6,7 @@ import Register from '../pages/Register';
 import Dashboard from '../pages/Dashboard';
 import Home from '../pages/Home';
 import About from '../pages/About';
+import Settings from '../pages/Settings';
 import {
   Route
 } from "react-router-dom";
@@ -34,6 +35,7 @@ class Routes extends React.Component {
                 <Route exact={true} path="/login" component={Login}/>
                 <Route exact={true} path="/register" component={Register}/>
                 <Route exact={true} path="/about" component={About}/>
+                <Route exact={true} path="/settings" component={Settings}/>
                 <PrivateRoute exact={true} path="/dashboard" component={Dashboard}/>
             </div>
         );

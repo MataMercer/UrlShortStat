@@ -44,7 +44,7 @@ router.post('/register', (req, res)=>{
     else{
         models.User.findOne({ where: {email} }).then(user => {
             if(user){
-                errors.push({msg:'Email is already registered'});
+                errors.push('Email is already registered');
                 return res.status(400).send({
                     message: errors
                 });

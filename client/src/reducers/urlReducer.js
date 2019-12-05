@@ -15,7 +15,25 @@ export default function(state = initialState, action){
                 urlCount: action.payload ? action.payload.count: 0,
                 loading: false
             }
-
+        case URL_CREATE:
+            if(action.payload){
+                return{
+                    ...state,
+                    urls: [
+                        {
+                            originalUrl: action.payload.originalUrl,
+                            urlCode: action.payload.urlCode
+                        },
+                        ...state.urls],
+                    urlCount: state.urlCount + 1,
+                    loading: false
+                }
+            }else{
+                return {
+                    ...state,
+                    loading: false
+                }
+            }
         case URL_DELETE:
             return {
                 ...state,

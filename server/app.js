@@ -60,6 +60,7 @@ app.use('/api/url', require('./routes/urls'));
 
 //urlshortener
 app.get('/u/:code', async (req, res) => {
+  console.log(req);
   try {
     models.Url.findByPk(req.params.code)
       .then((url)=>{

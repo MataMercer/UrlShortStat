@@ -4,12 +4,12 @@ import {CSSTransition, TransitionGroup} from 'react-transition-group';
 
 import {connect} from 'react-redux';
 import {getUrls, deleteUrl} from '../actions/urlActions';
-
+import CreateUrlForm from './CreateUrlForm';
 import PropTypes from 'prop-types';
 
 class UrlList extends React.Component {
     state = {
-        showCreateUrlForm = false
+        showCreateUrlForm: false
     }
 
     componentDidMount(){
@@ -21,6 +21,10 @@ class UrlList extends React.Component {
         this.props.deleteUrl(urlCode);
     }
 
+    onToggleCreateUrlForm = () =>{
+        this.setState({showCreateUrlForm: !this.state.showCreateUrlForm});
+    }
+
     render(){
         const urls = this.props.urls;
         const hostUrl = 'http://localhost:5000/u/';
@@ -28,16 +32,25 @@ class UrlList extends React.Component {
         return(
             <Container>
                 <h1>Your URLs</h1>
+                <h4>{this.props.urlCount} URL{this.props.urlCount === 1 ? '' : 's'}</h4>
 
+                <Button
+                onClick={this.onToggleCreateUrlForm.bind(this)}
+                >{
+                    this.state.showCreateUrlForm ? 
+                        'Close'
+                    :
+                    'Shorten a new URL'
+                }</Button>
+                
                 {
                     this.state.showCreateUrlForm ? 
-                    <Card>
-                        <h4>Create URL</h4>
-                        
-                    </Card>
+                        <CreateUrlForm/>
                     :
                     ""
                 }
+
+                
 
 
 
@@ -48,17 +61,18 @@ class UrlList extends React.Component {
                     
                     {urls.map(({urlCode, originalUrl}) => (
                         <Card>
-                            <Row>
-                                <h3>{hostUrl + urlCode}</h3>
-                                <Button
-                                    className="remove-btn"
-                                    color="danger"
-                                    size="small"
-                                    onClick={this.onDeleteClick.bind(this, urlCode)} 
-                                    >
-                                    X
-                                </Button>
-                            </Row>
+                        
+                            <p>{hostUrl + urlCode}</p>
+                            <p>{originalUrl.length>100 ? originalUrl.slice(-(originalUrl.length), 100) + '...' : originalUrl}</p>
+                            <Button
+                                className="remove-btn"
+                                color="danger"
+                                size="small"
+                                onClick={this.onDeleteClick.bind(this, urlCode)} 
+                                >
+                                X
+                            </Button>
+                        
                             </Card>
                     ))}
                     
@@ -78,7 +92,8 @@ UrlList.propTypes = {
 
 const mapStateToProps = (state) => ({
     urls: state.url.urls,
-    loading: state.url.loading
+    loading: state.url.loading,
+    urlCount: state.url.urlCount
 });
 
 
