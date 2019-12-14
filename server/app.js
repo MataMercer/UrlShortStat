@@ -9,6 +9,7 @@ require('./auth/passport')(passport);
 
 const SequelizeSessionStore = require('connect-session-sequelize')(session.Store);
 const models = require('./models');
+const path = require('path');
 
 var cors = require('cors');
 
