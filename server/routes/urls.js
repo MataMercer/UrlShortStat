@@ -20,7 +20,7 @@ router.post('/create', ensureAuthenticated, async (req, res)=>{
                     models.Url.findOne({ where: {code: customUrl}}).then(url => {
                         if(url){
                             return res.status(400).send({
-                                message: 'That URL is already taken. Please try again.'
+                                message: 'That custom URL code is already taken. Please try again.'
                             });
                         }
                         else{
@@ -61,7 +61,7 @@ router.post('/create', ensureAuthenticated, async (req, res)=>{
             }
     }
     else{
-        res.status(400).send({message: 'Invalid long url'});
+        res.status(400).send({message: 'Invalid long url. Make sure it starts with http:// or https://'});
     }
 
 });

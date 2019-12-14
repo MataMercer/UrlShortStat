@@ -65,8 +65,6 @@ class UrlListItem extends React.Component {
     }
 
     componentDidMount(){
-
-
         
         const myChartRef = this.chartRef.current.getContext("2d");
         var timeFormat = 'MM/DD/YYYY';
@@ -148,7 +146,7 @@ class UrlListItem extends React.Component {
                                 size="small"
                                 onClick={this.onDeleteClick.bind(this)} 
                             >
-                            X
+                            <i className="fas fa-trash"></i>
                         </Button>
                     </Col>
                     </Row>
@@ -163,7 +161,7 @@ class UrlListItem extends React.Component {
                         onCopy={() => {
                             this.setState({copied: true})}}>
                         <Button size="sm" onClick={(e) => {e.stopPropagation();}}>
-                            {this.state.copied ? <span>Copied!</span> : <span><i class="fas fa-copy"></i></span>}
+                            {this.state.copied ? <span>Copied!</span> : <span><i className="fas fa-copy"></i></span>}
                         </Button>
                     </CopyToClipboard>
                     </h4>

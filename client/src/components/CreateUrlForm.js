@@ -41,8 +41,10 @@ class CreateUrlForm extends React.Component{
 
 
         this.props.createUrl(newUrl).then((error) => {
-            if(error)
+            if(error){
                 console.log(error.response);
+                this.setState({formErrorMessages: [error.response.data.message]});
+            }
         });
 
         //redir
@@ -55,7 +57,10 @@ class CreateUrlForm extends React.Component{
         <Container>
             <Card>
 
-                {(this.state.formErrorMessages.length > 0) ? <Alert color="danger">{this.state.formErrorMessages.map((message)=>(<div>{message}<hr /></div>))}</Alert> : ""}
+                {(this.state.formErrorMessages.length > 0) ? 
+                    <Alert color="danger">
+                        {this.state.formErrorMessages.map((message)=>(<div>{message}<hr /></div>))}
+                    </Alert> : ""}
                 <Form onSubmit={this.onSubmit}>
                 <FormGroup>
                 <InputGroup>

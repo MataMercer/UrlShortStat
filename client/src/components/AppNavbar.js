@@ -36,11 +36,7 @@ class AppNavbar extends React.Component{
               this.props.name ? (
                 <Nav navbar={true}>
               
-              <Link to="/about">
-              <NavItem>
-                  <NavLink>About</NavLink>
-              </NavItem>
-                </Link>
+              
 
               <Link to="/settings">
               <NavItem>
@@ -54,6 +50,12 @@ class AppNavbar extends React.Component{
                     </NavItem>
                 </Link>
                 
+                <Link to="/about">
+              <NavItem>
+                  <NavLink>About</NavLink>
+              </NavItem>
+                </Link>
+
                 <NavItem>
                     <NavLink onClick={() => {
                         this.props.logoutUser(() => history.push('/'))

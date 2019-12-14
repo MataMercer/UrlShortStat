@@ -1,12 +1,13 @@
 import axios from 'axios';
 import {USER_LOGIN, USER_REGISTER, USER_LOGOUT, USER_CHECK_SESSION, USER_LOADING} from './types';
+import config from './../config/config';
 
 axios.defaults.withCredentials = true; 
-
+const serverUrl = config.serverUrl + '/api/user';
 export const registerUser = (user) => dispatch => {
     // dispatch(setUserLoading());
     return axios
-        .post('http://localhost:5000/api/user/register', user)
+        .post(serverUrl + '/register', user)
         .then(res =>{
             
             dispatch({
@@ -29,7 +30,7 @@ export const loginUser = (user) => dispatch => {
     // dispatch(setUserLoading());
 
     return axios
-        .post('http://localhost:5000/api/user/login', user)
+        .post(serverUrl + '/login', user)
         .then(res =>{
             console.log(res.data);
             dispatch({
@@ -53,7 +54,7 @@ export const logoutUser = (redir) => dispatch => {
     dispatch(setUserLoading());
 
     axios
-        .post('http://localhost:5000/api/user/logout')
+        .post(serverUrl + '/logout')
         .then(res =>{
             dispatch({
                 type: USER_LOGOUT,
@@ -76,7 +77,7 @@ export const checkUserSession = () => dispatch =>{
     dispatch(setUserLoading());
     
     axios
-        .get('http://localhost:5000/api/user/usernameandemail')
+        .get(serverUrl + '/usernameandemail')
         .then(res =>{
             console.log(res.data);
             dispatch({

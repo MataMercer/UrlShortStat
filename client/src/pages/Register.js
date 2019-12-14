@@ -59,6 +59,8 @@ class Register extends React.Component{
         this.props.registerUser(newUser).then((error)=>{
             if(error)
                 this.setState({formErrorMessages: error.response.data.message});
+            else
+                this.props.history.push('/dashboard');
         })
 
         //redir

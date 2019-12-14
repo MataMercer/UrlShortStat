@@ -58,7 +58,7 @@ class UrlList extends React.Component {
                     <ListGroup>
                     
                     {urls.map((url) => (
-                        <Row><UrlListItem key={url.code} url={url}/></Row>
+                        <Row key={url.code}><UrlListItem  url={url}/></Row>
                     ))}
                     
                     </ListGroup>        

@@ -1,12 +1,12 @@
 import axios from 'axios';
 import {URL_CREATE, URL_DELETE, URL_GET, URL_UPDATE, URL_LOADING} from './types';
-
+import config from './../config/config';
 axios.defaults.withCredentials = true; 
-
+const serverUrl = config.serverUrl + '/api/url';
 export const getUrls = () => dispatch => {
     dispatch(setUrlLoading());
     return axios
-        .get('http://localhost:5000/api/url')
+        .get(serverUrl + '/')
         .then(res =>{
             dispatch({
                 type: URL_GET,
@@ -29,7 +29,7 @@ export const getUrls = () => dispatch => {
 export const createUrl = (url) => dispatch => {
     dispatch(setUrlLoading());
     return axios
-        .post('http://localhost:5000/api/url/create', url)
+        .post(serverUrl + '/create', url)
         .then(res =>{
             console.log(res.data);
             dispatch({
@@ -54,7 +54,7 @@ export const createUrl = (url) => dispatch => {
 export const deleteUrl = (code) => dispatch => {
     // dispatch(setUrlLoading());
     return axios
-        .delete(`http://localhost:5000/api/url/${code}`)
+        .delete(serverUrl + `/${code}`)
         .then(res =>{
             dispatch({
                 type: URL_DELETE,

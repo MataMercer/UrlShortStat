@@ -59,12 +59,26 @@ router.post('/register', (req, res)=>{
                             name,
                             email,
                             password: hash
-                          }).then(function() {
-                            return res.send({
-                                message: 'you have successfully registered.',
-                                email: email,
-                                name: name
+                          }).then(function(user) {
+
+                            
+                            req.login(user, (err) => {
+                                if (err) {
+                                    console.log(err);
+                                    return res.status(500).send({message:err}); 
+                                }
+                                return res.send({
+                                    message: 'you have successfully registered.',
+                                    email: email,
+                                    name: name
+                                });
                             });
+
+                            
+
+                            
+
+                            
                           });
                     }));
 
