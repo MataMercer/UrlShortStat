@@ -2,8 +2,10 @@ import React from 'react';
 
 import {
     Button,
+    Collapse,
     Nav,
     Navbar,
+    NavbarToggler,
     NavbarBrand,
     NavItem,
     NavLink,
@@ -21,12 +23,25 @@ import {
 
 class AppNavbar extends React.Component{
     
+    state = {
+        isOpen: false
+    }
+
+    toggle(){
+        this.setState({isOpen: !this.state.isOpen})
+    }
 
     render(){
         const AuthNavbar = withRouter(({ history }) => (
               this.props.name ? (
-              <Nav navbar={true}>
+                <Nav navbar={true}>
               
+              <Link to="/about">
+              <NavItem>
+                  <NavLink>About</NavLink>
+              </NavItem>
+                </Link>
+
               <Link to="/settings">
               <NavItem>
                   <NavLink>{this.props.name}</NavLink>
@@ -49,6 +64,13 @@ class AppNavbar extends React.Component{
               </Nav>
             ) : (
                 <Nav navbar={true}>
+
+                <Link to="/about">
+                    <NavItem>
+                        <NavLink>About</NavLink>
+                    </NavItem>
+                </Link>
+
                 <Link to="/login">
                     <NavItem>
                         <NavLink>Login</NavLink>
@@ -66,17 +88,17 @@ class AppNavbar extends React.Component{
                         <NavbarBrand><img className="navbarLogo" src={logo}></img>URLShortStat</NavbarBrand>
                     </Link>
 
-                    <Nav navbar={true}>
-                        <Link to="/about">
-                            <NavItem>
-                                <NavLink>About</NavLink>
-                            </NavItem>
-                        </Link>
+                    <NavbarToggler onClick={this.toggle.bind(this)} />
+
+                    <Collapse isOpen={this.state.isOpen} navbar>
+                    
+                        
 
                         
+                    <AuthNavbar/>
+                    
+                    </Collapse>
                         
-                    </Nav>
-                        <AuthNavbar/>
                 </Navbar>
             
             </div>

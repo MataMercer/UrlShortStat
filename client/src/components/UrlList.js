@@ -1,11 +1,12 @@
 import React from 'react';
-import {Card, Container, ListGroup, Button, Row ,Spinner} from 'reactstrap';
+import {Col, Card, Container, ListGroup, Button, Row ,Spinner} from 'reactstrap';
 import {CSSTransition, TransitionGroup} from 'react-transition-group';
 
 import {connect} from 'react-redux';
-import {getUrls, deleteUrl} from '../actions/urlActions';
+import {getUrls} from '../actions/urlActions';
 import CreateUrlForm from './CreateUrlForm';
 import PropTypes from 'prop-types';
+import UrlListItem from './UrlListItem';
 
 class UrlList extends React.Component {
     state = {
@@ -15,10 +16,6 @@ class UrlList extends React.Component {
     componentDidMount(){
         this.props.getUrls();
         
-    }
-
-    onDeleteClick = (urlCode) => {
-        this.props.deleteUrl(urlCode);
     }
 
     onToggleCreateUrlForm = () =>{
@@ -31,6 +28,7 @@ class UrlList extends React.Component {
         
         return(
             <Container>
+                <Col>
                 <h1>Your URLs</h1>
                 <h4>{this.props.urlCount} URL{this.props.urlCount === 1 ? '' : 's'}</h4>
 
@@ -59,27 +57,14 @@ class UrlList extends React.Component {
                     :
                     <ListGroup>
                     
-                    {urls.map(({urlCode, originalUrl}) => (
-                        <Card>
-                        
-                            <p>{hostUrl + urlCode}</p>
-                            <p>{originalUrl.length>100 ? originalUrl.slice(-(originalUrl.length), 100) + '...' : originalUrl}</p>
-                            <Button
-                                className="remove-btn"
-                                color="danger"
-                                size="small"
-                                onClick={this.onDeleteClick.bind(this, urlCode)} 
-                                >
-                                X
-                            </Button>
-                        
-                            </Card>
+                    {urls.map((url) => (
+                        <Row><UrlListItem key={url.code} url={url}/></Row>
                     ))}
                     
                     </ListGroup>        
                 }
                 
-                
+                </Col>
             </Container>
         );
     }
@@ -100,6 +85,6 @@ const mapStateToProps = (state) => ({
 export default connect(
     mapStateToProps, 
     {
-        getUrls, deleteUrl
+        getUrls
     }
     )(UrlList);

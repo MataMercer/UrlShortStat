@@ -5,7 +5,6 @@
     "database": "expresssessiontest",
     "host": "192.168.1.155",
     "dialect": "postgres",
-    "operatorsAliases": false,
     "logging": false
   },
   "test": {
@@ -18,7 +17,6 @@
     "password": null,
     "database": "database_production",
     "host": "127.0.0.1",
-    "dialect": "mysql",
-    "operatorsAliases": false
+    "dialect": "mysql"
   }
 }

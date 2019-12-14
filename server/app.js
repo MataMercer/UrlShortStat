@@ -60,11 +60,19 @@ app.use('/api/url', require('./routes/urls'));
 
 //urlshortener
 app.get('/u/:code', async (req, res) => {
-  console.log(req);
+  // console.log(req);
   try {
     models.Url.findByPk(req.params.code)
       .then((url)=>{
           if (url) {
+              try{
+                models.Visit.create({
+                  UrlCode: req.params.code
+              });
+              }
+              catch(err){
+                console.log(err);
+              }
               return res.redirect(url.dataValues.originalUrl);
             } else {
               return res.status(404).json('No url found');

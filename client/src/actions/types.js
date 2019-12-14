@@ -13,3 +13,4 @@ export const URL_CREATE = 'URL_CREATE';
 export const URL_DELETE = 'URL_DELETE';
 export const URL_UPDATE = 'URL_UPDATE';
 export const URL_LOADING = 'URL_LOADING';
+export const URL_ANALYZE = 'URL_ANALYZE';

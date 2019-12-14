@@ -51,14 +51,14 @@ export const createUrl = (url) => dispatch => {
 
 
 
-export const deleteUrl = (urlCode) => dispatch => {
+export const deleteUrl = (code) => dispatch => {
     // dispatch(setUrlLoading());
     return axios
-        .delete(`http://localhost:5000/api/url/${urlCode}`)
+        .delete(`http://localhost:5000/api/url/${code}`)
         .then(res =>{
             dispatch({
                 type: URL_DELETE,
-                payload: urlCode
+                payload: code
             })
         })
         .catch(error =>{

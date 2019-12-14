@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Url = sequelize.define('Url', {
     originalUrl: DataTypes.TEXT,
-    urlCode: {
+    code: {
       type: DataTypes.STRING,
       primaryKey: true
     }

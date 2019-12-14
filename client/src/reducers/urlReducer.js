@@ -22,7 +22,7 @@ export default function(state = initialState, action){
                     urls: [
                         {
                             originalUrl: action.payload.originalUrl,
-                            urlCode: action.payload.urlCode
+                            code: action.payload.code
                         },
                         ...state.urls],
                     urlCount: state.urlCount + 1,
@@ -37,7 +37,7 @@ export default function(state = initialState, action){
         case URL_DELETE:
             return {
                 ...state,
-                urls: state.urls.filter(url => url.urlCode !== action.payload),
+                urls: state.urls.filter(url => url.code !== action.payload),
                 urlCount: state.urlCount - 1,
             }
         case URL_LOADING:

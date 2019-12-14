@@ -1,8 +1,8 @@
 import React from 'react';
 // import logo from './logo.svg';
-import './App.scss';
+import './stylesheets/main.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import AppNavbar from './components/AppNavbar';
 import Routes from './routes/Routes';

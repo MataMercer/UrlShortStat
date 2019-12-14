@@ -51,7 +51,11 @@ class Login extends React.Component{
 
         this.props.loginUser(user).then((error) => {
           if(error){
-            this.setState({formErrorMessages: [error.response.data]})
+            try{
+              this.setState({formErrorMessages: [error.response.data]})
+            }catch(error){
+              this.setState({formErrorMessages: ['Unable to connect to server.']})
+            }            
           }
         });
 

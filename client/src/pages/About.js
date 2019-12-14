@@ -12,7 +12,7 @@ class About extends React.Component{
         return(
             <Container>
             <h1>About URLShortStat</h1>
-            <h3>URLShortStat is the fastest growing website in the world yet this is under construction. :D</h3>
+            <p>URL Shortstat is a website.</p>
             </Container>
         );
     }

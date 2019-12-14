@@ -1,10 +1,8 @@
 import React from 'react';
 import {
     Container,
-    Jumbotron,
     Button
 } from 'reactstrap';
-import { Link } from 'react-router-dom';
 class Settings extends React.Component{
 
 
