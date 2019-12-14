@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import Chart from 'chart.js';
 import axios from 'axios';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
+import config from './../config/config';
 axios.defaults.withCredentials = true; 
 var moment = require('moment');
 
@@ -34,7 +35,7 @@ class UrlListItem extends React.Component {
             this.setState({loading: true});
             if(this.state.isOpen){
                 axios
-                .get('http://localhost:5000/api/url/analytics/' + this.props.url.code)
+                .get(config.serverUrl + '/api/url/analytics/' + this.props.url.code)
                 .then(res =>{
                     this.setState({loading: false});
                     
@@ -130,7 +131,7 @@ class UrlListItem extends React.Component {
         const code = this.props.url.code;
         const originalUrl = this.props.url.originalUrl;
         
-        const fullUrl = 'http://localhost:5000/u/' + code;
+        const fullUrl = config.serverUrl + '/u/' + code;
         
         return(
             <Container>
