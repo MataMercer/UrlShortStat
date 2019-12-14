@@ -49,14 +49,7 @@ app.use(passport.session());
 app.use('/api/user', require('./routes/users'));
 app.use('/api/url', require('./routes/urls'));
 
-// Serve static assets if in production
-if(process.env.NODE_ENV === 'production'){
-  //Set static folder
-  app.use(express.static('./client/build'));
-  app.get('*', (req, res) => {
-      res.sendFile(path.resolve(__dirname,'client', 'build', 'index.html'));
-  })
-}
+
 
 //urlshortener
 app.get('/u/:code', async (req, res) => {
@@ -83,6 +76,15 @@ app.get('/u/:code', async (req, res) => {
     res.status(500).json('Server error');
   }
 });
+
+// Serve static assets if in production
+if(process.env.NODE_ENV === 'production'){
+  //Set static folder
+  app.use(express.static('./client/build'));
+  app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname,'client', 'build', 'index.html'));
+  })
+}
 
 //test
 const {ensureAuthenticated} = require('./auth/auth');
