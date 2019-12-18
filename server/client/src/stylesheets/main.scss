@@ -1,7 +1,20 @@
 
+
+
 $font-stack:    Helvetica, sans-serif;
 $primary-color: #527474;
-
+$custom-border-radius: 10px;
+$primary: #09d3ac;
+$navbar-padding-y: 0.2rem;
+$navlink-padding-y: 0rem;
+$navbar-brand-padding-y: 0 rem;
+$btn-border-radius: $custom-border-radius;
+$modal-content-border-radius: $custom-border-radius;
+$url-list-item-color: rgb(240, 240, 240);
+$loading-bar-z-index: 1031;
+@import 'custom-variables';
+@import '../../node_modules/bootstrap/scss/bootstrap';
+@import 'custom-styles';
 /* .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -14,15 +27,58 @@ $primary-color: #527474;
 } */
 .page-content{
   background-color: white;
-  padding: 3rem;
-  height: 100vh;
+  padding: 0.8rem;
+  min-height: 100vh;
+ 
+  
+}
+
+.current-nav-link{
+  color: white;
+  background-color: $primary-color;
+  border-radius: $custom-border-radius;
+  padding: 0.3rem;
+}
+
+.url-list-item{
+  background-color: $url-list-item-color; 
+  border-radius: $custom-border-radius;
+  padding: 0.4rem;
+  margin-top: 0.5rem;
+  word-wrap: break-word;
 }
 
 
 
+
+
+.url-list-item:hover{
+  background-color: darken($url-list-item-color, 3%);;
+}
+
+#navbar{
+  background-color: $url-list-item-color;
+  position: fixed;
+  z-index: $loading-bar-z-index - 1;
+  top: 0px;
+   width: 100%;
+   box-shadow: 0px 4px 4px rgba(0, 0, 0, .1);
+}
+
+.copy-button{
+  margin-left: 0.5rem;
+  border-radius: 50px !important;
+}
+
+.modal-dialog {
+  margin-top: 10rem !important;
+}
+
 .App{
+  margin-top: 2.5rem;
   background-color: $primary-color;
-  
+  background-attachment: fixed;
+  background-position: center top;
 }
 
 .App-link {
@@ -30,7 +86,18 @@ $primary-color: #527474;
 }
 
 .navbarLogo{
-  width: 3rem;
+  width: 2.4rem;
   padding: 0.5rem;
   border-radius: 30%;
+}
+
+.url-list-item-chart{
+  background: white;
+  padding: 5px;
+  border-radius: $custom-border-radius;
+}
+
+// loading bar
+#nprogress .bar {
+  background:$primary;
 }

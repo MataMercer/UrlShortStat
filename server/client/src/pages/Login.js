@@ -90,7 +90,7 @@ class Login extends React.Component{
                         <InputGroupAddon addonType="prepend">
                             <InputGroupText>P</InputGroupText>
                         </InputGroupAddon>
-                        <Input name="password" placeholder="Password (At least 6 characters)" type="password" onChange={this.onChange}/>
+                        <Input name="password" placeholder="Password" type="password" onChange={this.onChange}/>
                     </InputGroup>
 
                     <Button>Log in</Button>

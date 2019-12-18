@@ -1,4 +1,4 @@
-import {URL_CREATE, URL_DELETE, URL_GET, URL_UPDATE, URL_LOADING} from '../actions/types';
+import {URL_CREATE, URL_DELETE, URL_GET, URL_EDIT, URL_LOADING} from '../actions/types';
 
 const initialState = {
     urls: [],
@@ -26,6 +26,24 @@ export default function(state = initialState, action){
                         },
                         ...state.urls],
                     urlCount: state.urlCount + 1,
+                    loading: false
+                }
+            }else{
+                return {
+                    ...state,
+                    loading: false
+                }
+            }
+        case URL_EDIT:
+            if(action.payload){
+                return{
+                    ...state,
+                    urls: [
+                        {
+                            originalUrl: action.payload.originalUrl,
+                            code: action.payload.code
+                        },
+                        ...state.urls.filter((url)=>url.code===action.payload.code)],
                     loading: false
                 }
             }else{

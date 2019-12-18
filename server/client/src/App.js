@@ -1,7 +1,8 @@
 import React from 'react';
 // import logo from './logo.svg';
+import 'axios-progress-bar/dist/nprogress.css'
 import './stylesheets/main.scss';
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import AppNavbar from './components/AppNavbar';
@@ -11,7 +12,7 @@ import {connect} from 'react-redux';
 import {checkUserSession} from './actions/userActions';
 import {Spinner, Container} from 'reactstrap';
 
-import 'axios-progress-bar/dist/nprogress.css'
+
 import { loadProgressBar } from 'axios-progress-bar'
 
 

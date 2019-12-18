@@ -8,9 +8,12 @@ import Home from '../pages/Home';
 import About from '../pages/About';
 import Settings from '../pages/Settings';
 import {
-  Route
+  Route, Switch
 } from "react-router-dom";
-
+import {
+    TransitionGroup,
+    CSSTransition
+  } from "react-transition-group";
 import PrivateRoute from './PrivateRoute';
 
 // const fakeAuth = {
@@ -30,14 +33,18 @@ import PrivateRoute from './PrivateRoute';
 class Routes extends React.Component {
     render(){
         return (
-            <div>
-                <Route exact={true} path="/" component={Home}/>
-                <Route exact={true} path="/login" component={Login}/>
-                <Route exact={true} path="/register" component={Register}/>
-                <Route exact={true} path="/about" component={About}/>
-                <Route exact={true} path="/settings" component={Settings}/>
-                <PrivateRoute exact={true} path="/dashboard" component={Dashboard}/>
-            </div>
+            <TransitionGroup>
+
+                <Switch>        
+                    <Route exact={true} path="/" component={Home}/>
+                    <Route exact={true} path="/login" component={Login}/>
+                    <Route exact={true} path="/register" component={Register}/>
+                    <Route exact={true} path="/about" component={About}/>
+                    <Route exact={true} path="/settings" component={Settings}/>
+                    <PrivateRoute exact={true} path="/dashboard" component={Dashboard}/>
+                </Switch>
+     
+            </TransitionGroup>
         );
     }
 }

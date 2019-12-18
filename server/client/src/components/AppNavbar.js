@@ -8,10 +8,12 @@ import {
     NavbarToggler,
     NavbarBrand,
     NavItem,
-    NavLink,
+    NavLink as reactstrapNavLink
   } from 'reactstrap';
 
   import {
+
+    NavLink,
     Link,
     withRouter
   } from "react-router-dom";
@@ -37,58 +39,58 @@ class AppNavbar extends React.Component{
                 <Nav navbar={true}>
               
               
-
-              <Link to="/settings">
+            
+              <NavLink activeClassName={'current-nav-link'} to="/settings">
               <NavItem>
-                  <NavLink>{this.props.name}</NavLink>
+                  {this.props.name}
               </NavItem>
-                </Link>
+                </NavLink>
 
-              <Link to="/dashboard">
-                    <NavItem>
-                        <NavLink>Dashboard</NavLink>
-                    </NavItem>
-                </Link>
+              <NavLink activeClassName={'current-nav-link'} to="/dashboard">
+                    
+                      Dashboard
+                    
+                </NavLink>
                 
-                <Link to="/about">
+                <NavLink activeClassName={'current-nav-link'} to="/about">
               <NavItem>
-                  <NavLink>About</NavLink>
+                  About
               </NavItem>
-                </Link>
+                </NavLink>
 
                 <NavItem>
-                    <NavLink onClick={() => {
+                    <div onClick={() => {
                         this.props.logoutUser(() => history.push('/'))
                       }}>
                         Log out
-                      </NavLink>
+                    </div>
                 </NavItem>
               </Nav>
             ) : (
                 <Nav navbar={true}>
 
-                <Link to="/about">
+                <NavLink activeClassName={'current-nav-link'} to="/about">
                     <NavItem>
-                        <NavLink>About</NavLink>
+                        About
                     </NavItem>
-                </Link>
+                </NavLink>
 
-                <Link to="/login">
+                <NavLink activeClassName={'current-nav-link'} to="/login">
                     <NavItem>
-                        <NavLink>Login</NavLink>
+                        Login
                     </NavItem>
-                </Link>
+                </NavLink>
                 </Nav>
             )
           ));
 
         return(
             <div>
-                <Navbar color="light" light expand="md">
+                <Navbar color="light" light expand="md" id="navbar">
 
-                    <Link to="/">
+                    <NavLink to="/">
                         <NavbarBrand><img className="navbarLogo" src={logo}></img>URLShortStat</NavbarBrand>
-                    </Link>
+                    </NavLink>
 
                     <NavbarToggler onClick={this.toggle.bind(this)} />
 

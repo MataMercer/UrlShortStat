@@ -5,12 +5,14 @@ import {CSSTransition, TransitionGroup} from 'react-transition-group';
 import {connect} from 'react-redux';
 import {getUrls} from '../actions/urlActions';
 import CreateUrlForm from './CreateUrlForm';
+import EditUrlForm from './EditUrlForm';
 import PropTypes from 'prop-types';
 import UrlListItem from './UrlListItem';
 
 class UrlList extends React.Component {
     state = {
-        showCreateUrlForm: false
+        showCreateUrlForm: false,
+        showEditUrlForm: false
     }
 
     componentDidMount(){
@@ -20,6 +22,10 @@ class UrlList extends React.Component {
 
     onToggleCreateUrlForm = () =>{
         this.setState({showCreateUrlForm: !this.state.showCreateUrlForm});
+    }
+
+    onToggleEditUrlForm = () => {
+        this.setState({showEditUrlForm: !this.state.showEditUrlForm})
     }
 
     render(){
@@ -34,16 +40,23 @@ class UrlList extends React.Component {
 
                 <Button
                 onClick={this.onToggleCreateUrlForm.bind(this)}
-                >{
-                    this.state.showCreateUrlForm ? 
-                        'Close'
-                    :
-                    'Shorten a new URL'
+                color="primary"
+                >
+                <i className="fas fa-plus"></i>
+                {
+                    ' Shorten a new URL'
                 }</Button>
                 
                 {
                     this.state.showCreateUrlForm ? 
-                        <CreateUrlForm/>
+                        <CreateUrlForm showCreateUrlForm={this.state.showCreateUrlForm} onToggleCreateUrlForm={this.onToggleCreateUrlForm.bind(this)}/>
+                    :
+                    ""
+                }
+
+                {
+                    this.state.showEditUrlForm ? 
+                        <EditUrlForm showEditUrlForm={this.state.showEditUrlForm} onToggleEditUrlForm={this.onToggleEditUrlForm.bind(this)}/>
                     :
                     ""
                 }
@@ -58,7 +71,7 @@ class UrlList extends React.Component {
                     <ListGroup>
                     
                     {urls.map((url) => (
-                        <Row key={url.code}><UrlListItem  url={url}/></Row>
+                        <Row key={url.code}><UrlListItem url={url} onToggleEditUrlForm={this.onToggleEditUrlForm.bind(this)}/></Row>
                     ))}
                     
                     </ListGroup>        

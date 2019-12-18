@@ -126,21 +126,28 @@ class UrlListItem extends React.Component {
         this.props.deleteUrl(this.props.url.code);
     }
 
+    onEditClick = (e) => {
+        e.stopPropagation();
+        this.props.onToggleEditUrlForm();
+    }
+
 
     render(){
         const code = this.props.url.code;
         const originalUrl = this.props.url.originalUrl;
         
         const fullUrl = config.serverUrl + '/u/' + code;
-        
+
+          
         return(
             <Container>
-                <Card onClick={this.toggle.bind(this)}>
+                <div onClick={this.toggle.bind(this)} className="url-list-item">
                     <Col>
                     <Row>
                     
 
                     <Col >
+                            
                             <Button
                                 className="remove-btn float-right"
                                 color="danger"
@@ -148,7 +155,15 @@ class UrlListItem extends React.Component {
                                 onClick={this.onDeleteClick.bind(this)} 
                             >
                             <i className="fas fa-trash"></i>
-                        </Button>
+                            </Button>
+
+                            <Button
+                                className="remove-btn float-right"
+                                size="small"
+                                onClick={this.onEditClick.bind(this)} 
+                            >
+                                <i className="fas fa-edit"></i>
+                            </Button>
                     </Col>
                     </Row>
                     
@@ -161,7 +176,7 @@ class UrlListItem extends React.Component {
                         
                         onCopy={() => {
                             this.setState({copied: true})}}>
-                        <Button size="sm" onClick={(e) => {e.stopPropagation();}}>
+                        <Button size="sm" onClick={(e) => {e.stopPropagation();}} className="copy-button">
                             {this.state.copied ? <span>Copied!</span> : <span><i className="fas fa-copy"></i></span>}
                         </Button>
                     </CopyToClipboard>
@@ -175,7 +190,7 @@ class UrlListItem extends React.Component {
                     <Collapse isOpen={this.state.isOpen}>
                         
                             {this.state.loading ? <Spinner/> : ''}
-                            <div onClick={(e) => {e.stopPropagation();}}>
+                            <div onClick={(e) => {e.stopPropagation();}} className="url-list-item-chart">
                             <canvas
                                 id="myChart"
                                 ref={this.chartRef}
@@ -186,7 +201,7 @@ class UrlListItem extends React.Component {
                     </Collapse>
                     
                     </Col>
-                    </Card>      
+                    </div>      
             </Container>
         );
     }

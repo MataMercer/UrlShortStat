@@ -2,12 +2,10 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import { Alert, FormGroup, Form, Button, Container, Card, InputGroup, InputGroupAddon, InputGroupText, Input, Modal, ModalHeader, ModalBody, ModalFooter, Spinner } from 'reactstrap';
-import {createUrl} from '../actions/urlActions';
-class CreateUrlForm extends React.Component{
+import {editUrl} from '../actions/urlActions';
+class EditUrlForm extends React.Component{
     state = {
         originalUrl: '',
-        customUrl: '',
-        useCustomUrl: false,
         formErrorMessages: ''
     }
 
@@ -40,7 +38,7 @@ class CreateUrlForm extends React.Component{
         }
 
 
-        this.props.createUrl(newUrl).then((error) => {
+        this.props.editUrl(newUrl).then((error) => {
             if(error){
                 console.log(error.response);
                 this.setState({formErrorMessages: [error.response.data.message]});
@@ -55,9 +53,9 @@ class CreateUrlForm extends React.Component{
     render(){
         return (
         <Container>
-        <Modal isOpen={this.props.showCreateUrlForm} toggle={this.props.onToggleCreateUrlForm}>
+        <Modal isOpen={this.props.showEditUrlForm} toggle={this.props.onToggleEditUrlForm}>
             <ModalBody>
-                <ModalHeader toggle={this.props.onToggleCreateUrlForm}>Create URL</ModalHeader>
+                <ModalHeader toggle={this.props.onToggleEditUrlForm}>Edit URL</ModalHeader>
                 {(this.state.formErrorMessages.length > 0) ? 
                     <Alert color="danger">
                         {this.state.formErrorMessages.map((message)=>(<div>{message}<hr /></div>))}
@@ -71,15 +69,6 @@ class CreateUrlForm extends React.Component{
                     <Input name="originalUrl" placeholder="URL to shorten"  type="text" onChange={this.onChange}/>
                 </InputGroup>
 
-                <InputGroup>
-                    <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                        <Input name="useCustomUrl" addon type="checkbox" onChange={this.handleCheckboxChange} aria-label="Checkbox for following text input" />
-                         Use custom URL
-                        </InputGroupText>
-                    </InputGroupAddon>
-
-                </InputGroup>
                 
                 {
                     this.state.useCustomUrl ?
@@ -94,7 +83,7 @@ class CreateUrlForm extends React.Component{
                 
 
 
-                <Button>Create</Button>
+                <Button>Save changes</Button>
                 </FormGroup>
                 </Form>
             </ModalBody>
@@ -109,7 +98,7 @@ class CreateUrlForm extends React.Component{
 
    
 
-CreateUrlForm.propTypes = {
+EditUrlForm.propTypes = {
 
     loading: PropTypes.bool.isRequired
 }
@@ -119,4 +108,4 @@ const mapStateToProps = (state) => ({
 });
 
 
-export default connect(mapStateToProps, {createUrl})(CreateUrlForm);
+export default connect(mapStateToProps, {editUrl})(EditUrlForm);
