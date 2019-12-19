@@ -188,7 +188,10 @@ class UrlListItem extends React.Component {
                     
                     
                     <Collapse isOpen={this.state.isOpen}>
-                        
+                    <Row><Col><h4>Visits in the Last 30 Days</h4></Col></Row>
+                        <Row>
+                            
+                            <Col>
                             {this.state.loading ? <Spinner/> : ''}
                             <div onClick={(e) => {e.stopPropagation();}} className="url-list-item-chart">
                             <canvas
@@ -196,6 +199,11 @@ class UrlListItem extends React.Component {
                                 ref={this.chartRef}
                             />
                             </div>
+                            </Col>
+                            <Col>
+                                <Row><Col><Row><h4>679</h4></Row> <Row>Total Visits</Row></Col></Row>
+                            </Col>
+                        </Row>
                             
                         
                     </Collapse>

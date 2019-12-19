@@ -107,16 +107,38 @@ function sameDay(d1, d2) {
       d1.getDate() === d2.getDate();
   }
 
-router.get('/analytics/:code', ensureAuthenticated, async(req, res) => {
+router.get('/analytics', ensureAuthenticated, async(req, res) => {
     try {
-        const days = 30; //number of days to look back at. we'll just use 30 for this project. 
+        const { timeSpan, unitsBackInTime, code, date } = req.body;
+        
+        const currentDate = new Date(date);
+        let lowerBoundDate;
+        let upperBoundDate;
+        switch(timeSpan){
+            case 'month':
+               lowerBoundDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - unitsBackInTime, 1); // first dday of month
+               upperBoundDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - unitsBackInTime + 1, 1);//first of next month
+               break;
+            case 'year':
+                lowerBoundDate = new Date(currentDate.getFullYear() - unitsBackInTime, 0, 1);
+                lowerBoundDate = new Date(currentDate.getFullYear() + 1 - unitsBackInTime, 0, 1);
+                break; 
+            case 'eachyear':
+                lowerBoundDate = null;
+                break;
+            default:
+                //last 30 days
+                upperBoundDate = currentDate;
+                lowerBoundDate = new Date(upperBoundDate.getFullYear(), upperBoundDate.getMonth()-1, upperBoundDate.getDate())
+        }
+
         models.Visit
             .findAll({where:
                 {
-                    UrlCode: req.params.code,
+                    UrlCode: code,
                     createdAt: {
-                        [Op.lt]: new Date(),
-                        [Op.gt]: new Date(new Date() - 24 * 60 * 60 * 1000 * days)
+                        [Op.lte]: upperBoundDate,
+                        [Op.gte]: lowerBoundDate
                       }
                 
                 }})

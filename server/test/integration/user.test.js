@@ -23,10 +23,8 @@ describe('Register route', () => {
         return require('../../models').sequelize.sync();
     });
     
-    beforeEach(function () {
-        return Bluebird.all([
-            models.User.destroy({ truncate: true })
-        ]);
+    beforeEach(async function () {
+        await models.User.destroy({ truncate: true });
     });
 
 
@@ -203,6 +201,26 @@ describe('logout route', () => {
             .send(newUser)
             .end((error1, response) => {
                 if (error1) done(error1);
+                    agent
+                        .get('/authrequired')
+                        .end((error1, response1) => {
+                            if (error1) done(error1);
+                            expect(response1).to.have.status(200);
+                            done();
+                        });
+                });
+            
+            });
+    
+
+    it('Returns a 401 response when logging in, logging out, then going to an auth required route.', (done) => {
+        let agent = chai.request.agent(app)
+        agent
+            .post('/api/user/register')
+            .type('application/json')
+            .send(newUser)
+            .end((error1, response) => {
+                if (error1) done(error1);
                 agent
                     .post('/api/user/logout')
                     .type('application/json')
@@ -219,9 +237,9 @@ describe('logout route', () => {
                 });
             
             });
-        });
-        
     });
+        
+});
 
 
 

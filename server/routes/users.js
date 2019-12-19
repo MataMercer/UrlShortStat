@@ -19,7 +19,6 @@ router.post('/register', (req, res)=>{
     if(!name || !email || !password || !password2
         ||  name == undefined || email == undefined || password == undefined || password2 == undefined) {
         errors.push('Please fill in all fields.');
-        console.log(name);
         return res.status(400).send({
             message: errors
         });
