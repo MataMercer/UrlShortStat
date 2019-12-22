@@ -10,7 +10,7 @@ const Op = Sequelize.Op;
 const moment = require('moment');
 
 
-router.post('/create', ensureAuthenticated, async (req, res)=>{
+router.post('/create', ensureAuthenticated, (req, res)=>{
     const {originalUrl, customUrl} = req.body;
     // const baseUrl= req.get('host');
     
@@ -66,9 +66,50 @@ router.post('/create', ensureAuthenticated, async (req, res)=>{
 
 });
 
+router.put('/edit', ensureAuthenticated, (req, res)=>{
+    const {originalUrl, code} = req.body;
+    // const baseUrl= req.get('host');
+    
+    if(validUrl.isUri(originalUrl)){
+            try{
+                if(code){
+                    models.Url.findByPk(code).then(url => {
+                        if(url){
+                            if(url.get('UserId') === req.user.dataValues.id){
+                                models.Url.update(
+                                    { originalUrl: originalUrl }, /* set attributes' value */
+                                    { where: { code }})
+                                    .then(function() {
+                                        return res.send({message: 'you have successfully registered a new url.', code, originalUrl});                               
+                                    });
+                            }
+                            else{
+                                return res.status(403).json('Forbidden access');
+                            }
+                        }
+                        else{
+                            return res.status(404).json('No url found');
+                        }
+                    })
+                }
+                else{
+                    return res.status(400).send({
+                        message: 'No code was provided.'
+                    });
+                }
+            }
+            catch(error){
+                console.log(error)
+                res.status(500).send({message:'Server error.'});
+            }
+    }
+    else{
+        res.status(400).send({message: 'Invalid long url. Make sure it starts with http:// or https://'});
+    }
 
+});
 
-router.get('/', ensureAuthenticated, async(req,res)=>{
+router.get('/', ensureAuthenticated, (req,res)=>{
     try {
         models.Url.findAndCountAll({ where:{UserId: req.user.dataValues.id} })
           .then((result)=>{
@@ -83,13 +124,18 @@ router.get('/', ensureAuthenticated, async(req,res)=>{
       }
 })
 
-router.delete('/:code', ensureAuthenticated, async(req, res) => {
+router.delete('/:code', ensureAuthenticated, (req, res) => {
     try {
         models.Url.findByPk(req.params.code)
           .then((url)=>{
               if (url) {
-                  url.destroy();
-                  return res.json('url deleted');
+                  if(url.get('UserId') === req.user.dataValues.id){
+                    url.destroy();
+                    return res.json('url deleted');
+                  }
+                  else{
+                    return res.status(403).json('Forbidden access');
+                  }
                 } else {
                   return res.status(404).json('No url found');
                 }
@@ -107,33 +153,39 @@ function sameDay(d1, d2) {
       d1.getDate() === d2.getDate();
   }
 
-router.get('/analytics', ensureAuthenticated, async(req, res) => {
+router.get('/analytics', ensureAuthenticated, (req, res) => {
     try {
         const { timeSpan, unitsBackInTime, code, date } = req.body;
         
         const currentDate = new Date(date);
         let lowerBoundDate;
         let upperBoundDate;
+        let format;
         switch(timeSpan){
             case 'month':
                lowerBoundDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - unitsBackInTime, 1); // first dday of month
-               upperBoundDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - unitsBackInTime + 1, 1);//first of next month
+               upperBoundDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - unitsBackInTime + 1, 0);//first of next month
+               format = "MM/DD/YYYY";
                break;
             case 'year':
                 lowerBoundDate = new Date(currentDate.getFullYear() - unitsBackInTime, 0, 1);
-                lowerBoundDate = new Date(currentDate.getFullYear() + 1 - unitsBackInTime, 0, 1);
+                upperBoundDate = new Date(currentDate.getFullYear() + 1 - unitsBackInTime, 0, 0);
+                format = "MM/YYYY";
                 break; 
             case 'eachyear':
-                lowerBoundDate = null;
+                upperBoundDate = currentDate;
+                lowerBoundDate = new Date(currentDate.getFullYear() + 1 - unitsBackInTime, 0, 1); //earliest is 20 years ago
+                format = "YYYY";
                 break;
             default:
                 //last 30 days
                 upperBoundDate = currentDate;
-                lowerBoundDate = new Date(upperBoundDate.getFullYear(), upperBoundDate.getMonth()-1, upperBoundDate.getDate())
+                lowerBoundDate = new Date(upperBoundDate.getFullYear(), upperBoundDate.getMonth()-1, upperBoundDate.getDate());
+                format = "MM/DD/YYYY";
         }
 
         models.Visit
-            .findAll({where:
+            .findAndCountAll({where:
                 {
                     UrlCode: code,
                     createdAt: {
@@ -143,7 +195,7 @@ router.get('/analytics', ensureAuthenticated, async(req, res) => {
                 
                 }})
             .then((visits)=>{
-              const cleanedVisits = visits.map((visit)=>(moment(visit.get('createdAt')).format("MM/DD/YYYY")));
+              const cleanedVisits = visits.rows.map((visit)=>(moment(visit.get('createdAt')).format(format)));
               let dateToVisitCount = {};
               for(let i = 0; i<cleanedVisits.length; i++){
                     if((cleanedVisits[i] in dateToVisitCount) === false){
@@ -152,7 +204,8 @@ router.get('/analytics', ensureAuthenticated, async(req, res) => {
                         dateToVisitCount[cleanedVisits[i]] = dateToVisitCount[cleanedVisits[i]] + 1;
                     }
                 }
-            return res.send({monthVisits: dateToVisitCount})
+            return res.send({dataPoints: dateToVisitCount,
+                            totalVisits: visits.count})
           })    
       } catch (err) {
         console.error(err);
