@@ -10,7 +10,7 @@ class Settings extends React.Component{
         return(
             <Container>
             <h1>Account Settings</h1>
-            <h3>URLShortStat is the fastest growing website in the world yet this is under construction. :D</h3>
+            <h3>Under construction</h3>
             </Container>
         );
     }

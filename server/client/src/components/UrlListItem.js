@@ -1,5 +1,15 @@
 import React from 'react';
-import {Col, Card, Collapse, Container, ListGroup, Button, Row ,Spinner} from 'reactstrap';
+import {Col, 
+    Card,  
+    Collapse, 
+    Container, 
+    FormGroup, 
+    Label, 
+    Input, 
+    ListGroup, 
+    Button, 
+    Row ,
+    Spinner} from 'reactstrap';
 import {CSSTransition, TransitionGroup} from 'react-transition-group';
 
 import {connect} from 'react-redux';
@@ -10,115 +20,48 @@ import Chart from 'chart.js';
 import axios from 'axios';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import config from './../config/config';
+import UrlAnalytics from './UrlAnalytics';
 axios.defaults.withCredentials = true; 
 var moment = require('moment');
 
 
 
 class UrlListItem extends React.Component {
-    chartRef = React.createRef();
-    chart = null;
+
     constructor(props) {
         super(props);
-        
       }
     state = {
         isOpen: false,
         loading: false,
-        copied: false
+        copied: false,
+        timeSpan: 'last30days',
+        unitsBackInTime: 0
     }
 
+    onChange = async (e) => {
+        e.stopPropagation();
+        this.setState({[e.target.name]: e.target.value});
+    }
 
     toggle = (e) =>{
-        this.setState({isOpen: !this.state.isOpen}, () => {
+        this.setState({isOpen: !this.state.isOpen} 
+            // async () => {
 
-            this.setState({loading: true});
-            if(this.state.isOpen){
-                axios
-                .get(config.serverUrl + '/api/url/analytics/' + this.props.url.code)
-                .then(res =>{
-                    this.setState({loading: false});
-                    
-                    let monthVisits = res.data.monthVisits;
-                    console.log(monthVisits);
-                    let data = [];
-                    for (let key in monthVisits) {
-                        data.push({
-                            x: key,
-                            y: monthVisits[key]
-                        })
-                    }
-                
-                    this.chart.data.datasets.forEach((dataset) => {
-                        dataset.data.pop();
-                        dataset.data = data;
-                    });
-                    this.chart.update();
-                    
-                })
-                .catch(error =>{
-                    console.log(error.response);
-                    this.setState({loading: false});
-                });
-            }
+            // if(this.state.isOpen){
+            //     this.initChart();
+            //     const data = await this.getAnalytics();
 
-        });
-    }
+            //     this.chart.data.datasets.forEach((dataset) => {
+            //         dataset.data.pop();
+            //         dataset.data = data;
+            //     });
+            //     this.chart.update();
+               
+            // }
 
-    componentDidMount(){
-        
-        const myChartRef = this.chartRef.current.getContext("2d");
-        var timeFormat = 'MM/DD/YYYY';
-
-		function newDate(days) {
-			return moment().subtract(days, 'd').toDate();
-		}
-
-		function newDateString(days) {
-			return moment().subtract(days, 'd').format(timeFormat);
-        }
-        
-        function psqlToDate(psqlDate){
-            return moment(psqlDate).format(timeFormat);
-        }
-        // var color = Chart.helpers.color;
-        const lineColor = '#69cfff';
-        var config = {
-			type: 'line',
-			data: {
-
-				datasets: [{
-                    label: 'Visits',
-                    backgroundColor: lineColor,
-                    borderColor: lineColor,
-					fill: false,
-					data: [
-
-					],
-				}]
-            },
-            options: {
-                scales: {
-                    xAxes: [{
-                        type: 'time',
-                        time: {
-                            unit: 'day',
-                            unitStepSize: 2,
-                            displayFormats: {
-                            'day': 'MMM DD'
-                            }
-                        }
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
-            }
-			
-		};
-        this.chart = new Chart(myChartRef, config);
+        // }
+        );
     }
 
     onDeleteClick = (e) => {
@@ -135,17 +78,13 @@ class UrlListItem extends React.Component {
     render(){
         const code = this.props.url.code;
         const originalUrl = this.props.url.originalUrl;
-        
         const fullUrl = config.serverUrl + '/u/' + code;
 
-          
         return(
             <Container>
                 <div onClick={this.toggle.bind(this)} className="url-list-item">
                     <Col>
                     <Row>
-                    
-
                     <Col >
                             
                             <Button
@@ -187,29 +126,39 @@ class UrlListItem extends React.Component {
                     <p>{originalUrl.length>100 && !this.state.isOpen ? originalUrl.slice(-(originalUrl.length), 50) + '...' : originalUrl}</p>
                     
                     
-                    <Collapse isOpen={this.state.isOpen}>
-                    <Row><Col><h4>Visits in the Last 30 Days</h4></Col></Row>
+                    
+                    
+                    </Col>
+                   
+                    </div>
+                    <Collapse isOpen={this.state.isOpen} className="url-list-item-analytics-section">
+
+                    <FormGroup>
+                        <Label for="timeSpan">Time Period</Label>
+                        <Input type="select" name="timeSpan" onChange={this.onChange}>
+                        <option value="last30days">Last 30 days</option>
+                        <option value="month">Month</option>
+                        <option value="year">Year</option>
+                        <option value="eachyear">Each Year</option>
+                        </Input>
+                        
+                        <Label for="unitsBackInTime">Units Back in Time</Label>
+                        <Input name="unitsBackInTime" value={this.state.unitsBackInTime} disabled={this.state.timeSpan==='last30days'} onChange={this.onChange} type="number" min="0" max="100"></Input>
+                    </FormGroup>
+
+                    <Row><Col><h4>Visits</h4></Col></Row>
                         <Row>
                             
-                            <Col>
-                            {this.state.loading ? <Spinner/> : ''}
-                            <div onClick={(e) => {e.stopPropagation();}} className="url-list-item-chart">
-                            <canvas
-                                id="myChart"
-                                ref={this.chartRef}
-                            />
-                            </div>
-                            </Col>
-                            <Col>
-                                <Row><Col><Row><h4>679</h4></Row> <Row>Total Visits</Row></Col></Row>
-                            </Col>
-                        </Row>
+                        
+                    </Row>
+                    <p>{this.state.timeSpan}</p>
                             
+                               
+                        <UrlAnalytics timeSpan={this.state.timeSpan} code={code} unitsBackInTime={this.state.unitsBackInTime}></UrlAnalytics>
                         
                     </Collapse>
                     
-                    </Col>
-                    </div>      
+                    
             </Container>
         );
     }

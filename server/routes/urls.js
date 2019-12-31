@@ -153,11 +153,11 @@ function sameDay(d1, d2) {
       d1.getDate() === d2.getDate();
   }
 
-router.get('/analytics', ensureAuthenticated, (req, res) => {
+router.post('/analytics', ensureAuthenticated, (req, res) => {
     try {
         const { timeSpan, unitsBackInTime, code, date } = req.body;
-        
-        const currentDate = new Date(date);
+
+        const currentDate = date ? new Date(date) : new Date();
         let lowerBoundDate;
         let upperBoundDate;
         let format;
@@ -180,7 +180,7 @@ router.get('/analytics', ensureAuthenticated, (req, res) => {
             default:
                 //last 30 days
                 upperBoundDate = currentDate;
-                lowerBoundDate = new Date(upperBoundDate.getFullYear(), upperBoundDate.getMonth()-1, upperBoundDate.getDate());
+                lowerBoundDate = new Date(upperBoundDate.getFullYear(), upperBoundDate.getMonth(), upperBoundDate.getDate()-30);
                 format = "MM/DD/YYYY";
         }
 
