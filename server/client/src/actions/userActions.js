@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {USER_LOGIN, USER_REGISTER, USER_LOGOUT, USER_CHECK_SESSION, USER_LOADING} from './types';
+import {USER_LOGIN, USER_REGISTER, USER_LOGOUT, USER_CHECK_SESSION, USER_LOADING, USER_EDIT} from './types';
 import config from './../config/config';
 
 axios.defaults.withCredentials = true; 
@@ -71,6 +71,19 @@ export const logoutUser = (redir) => dispatch => {
             })
             
         });
+}
+
+export const editUser = (user) => dispatch => {
+    dispatch(setUserLoading());
+
+    axios
+        .put(serverUrl + '/edit', user)
+        .then(res => {
+            dispatch({
+                type: USER_EDIT,
+                payload: res.data
+            })
+        })
 }
 
 export const checkUserSession = () => dispatch =>{

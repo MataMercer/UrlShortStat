@@ -1,13 +1,12 @@
 import React from 'react';
-import { Alert, FormGroup, Form, Button, Container, Card, InputGroup, InputGroupAddon, InputGroupText, Input, Spinner } from 'reactstrap';
+import { Alert, FormGroup, Form, Button,Label, Container, Card, InputGroup, InputGroupAddon, InputGroupText, Input, Spinner } from 'reactstrap';
 
 import {connect} from 'react-redux';
 import {registerUser} from '../actions/userActions';
 
 import PropTypes from 'prop-types';
 import {
-
-    Redirect,
+    Link
 } from 'react-router-dom'
 
 class Register extends React.Component{
@@ -78,43 +77,35 @@ class Register extends React.Component{
         }else{
             return(
                 <Container>
-                    <Card>
+                   
                         <h1>Register</h1>
                         {(this.state.formErrorMessages.length > 0) ? <Alert color="danger">{this.state.formErrorMessages.map((message)=>(<div>{message}<hr /></div>))}</Alert> : ""}
                         <Form onSubmit={this.onSubmit}>
                         <FormGroup>
-                        <InputGroup>
-                            <InputGroupAddon addonType="prepend">
-                                <InputGroupText>N</InputGroupText>
-                            </InputGroupAddon>
-                            <Input name="name" placeholder="Username"  type="text" onChange={this.onChange}/>
-                        </InputGroup>
+                            <Label for="name">Username</Label>
+                            <Input name="name" placeholder="i.e. TimApple"  id="name" type="text" onChange={this.onChange}/>
+                        </FormGroup>
 
-                        <InputGroup>
-                            <InputGroupAddon addonType="prepend">
-                                <InputGroupText>E</InputGroupText>
-                            </InputGroupAddon>
-                            <Input name="email" placeholder="Email" type="email" onChange={this.onChange}/>
-                        </InputGroup>
+                        <FormGroup>
+                            <Label for="email">Email Address</Label>
+                            <Input name="email" placeholder="example@email.com" type="email" id="email" onChange={this.onChange}/>
+                        </FormGroup>
 
-                        <InputGroup>
-                            <InputGroupAddon addonType="prepend">
-                                <InputGroupText>P</InputGroupText>
-                            </InputGroupAddon>
-                            <Input name="password" placeholder="Password (At least 6 characters)" type="password" onChange={this.onChange}/>
-                        </InputGroup>
+                        <FormGroup>
+                            <Label for="password">Password</Label>
+                            <Input name="password" placeholder="Password (At least 6 characters)" id="password" type="password" onChange={this.onChange}/>
+                        </FormGroup>
 
-                        <InputGroup>
-                            <InputGroupAddon addonType="prepend">
-                                <InputGroupText>P</InputGroupText>
-                            </InputGroupAddon>
-                            <Input name="password2" placeholder="Retype the password" type="password" onChange={this.onChange}/>
-                        </InputGroup>
+                        <FormGroup>
+                            <Label for="password2">Password</Label>
+                            <Input name="password2" placeholder="Retype password" type="password" id="password2" onChange={this.onChange}/>
+                        </FormGroup>
 
                         <Button>Register</Button>
-                        </FormGroup>
                         </Form>
-                    </Card>
+                        <hr/>
+                        <p>Already have an account? Login <Link to="/login">here</Link>.</p>
+                   
                 </Container>
             );
         }

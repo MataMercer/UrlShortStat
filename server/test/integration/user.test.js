@@ -14,20 +14,13 @@ describe('Register route', () => {
         'password2': 'validpassword'
     }
 
-    
-
-    
-
-
     before(function () {
-        return require('../../models').sequelize.sync();
+        return require('../../models').sequelize.sync({force: true});
     });
     
     beforeEach(async function () {
         await models.User.destroy({ truncate: true });
     });
-
-
 
     it('Returns a 200 response with valid input', (done) => {
         chai.request(app)
@@ -74,8 +67,6 @@ describe('Register route', () => {
             });
         })
     });
-
-    
 });
 
 describe('login route', () => {
@@ -185,7 +176,7 @@ describe('logout route', () => {
 
     
     before(function () {
-        return require('../../models').sequelize.sync();
+        return require('../../models').sequelize.sync({force:true});
     });
     
     beforeEach(function () {
@@ -238,7 +229,54 @@ describe('logout route', () => {
             
             });
     });
+
+
         
+});
+
+
+describe('Edit route', () => {
+    const agent = chai.request.agent(app);
+    const validUser = {
+        'name': 'validname',
+        'email': 'valid@email.com',
+        'password': 'validpassword',
+        'password2': 'validpassword'
+    }
+
+    before(function () {
+        return require('../../models').sequelize.sync({force: true});
+    });
+    
+    beforeEach(async function () {
+        await models.User.destroy({ truncate: true });
+    });
+
+    //TODO:"finish tests for edit"
+    it("Returns a 200 response with valid input, changes the user's password. ", async () => {
+        const register_response = await agent
+                .post('/api/user/register')
+                .type('application/json')
+                .send(validUser);
+        expect(register_response).to.have.status(200);
+        const edit_response = await agent
+                .put('/api/user/edit')
+                .type('application/json')
+                .send({
+                   name : 'validnameEDIT',
+                   email:  'validEDIT@email.com'
+                })
+        expect(edit_response).to.have.status(200);
+        const usernameandemail_response = await agent
+            .get('/api/user/usernameandemail')
+            .type('application/json')
+
+        expect(usernameandemail_response.body.email).to.be.equal('validEDIT@email.com');
+        expect(usernameandemail_response.body.name).to.be.equal('validnameEDIT');
+    });
+
+    
+
 });
 
 

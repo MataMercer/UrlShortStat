@@ -1,8 +1,9 @@
-import { USER_REGISTER, USER_LOADING, USER_LOGIN, USER_LOGOUT, USER_CHECK_SESSION } from "../actions/types";
+import { USER_REGISTER, USER_LOADING, USER_LOGIN, USER_LOGOUT, USER_EDIT, USER_CHECK_SESSION } from "../actions/types";
 
 const initialState = {
     name: '',
-    loading: false
+    loading: false,
+    email: ''
 }
 
 export default function(state = initialState, action){
@@ -25,11 +26,18 @@ export default function(state = initialState, action){
                 name: action.payload === '' ? '' : state.name,
                 loading: false
             }
+        case USER_EDIT:
+            return {
+                ...state,
+                name: action.payload ? action.payload.name : state.name,
+                loading: false
+            }
         case USER_CHECK_SESSION:
       
             return {
                 ...state,
                 name: action.payload ? action.payload.name : '',
+                email: action.payload ? action.payload.email : '',
                 loading: false
             }      
         case USER_LOADING:

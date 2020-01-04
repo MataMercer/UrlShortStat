@@ -12,7 +12,8 @@ import UrlListItem from './UrlListItem';
 class UrlList extends React.Component {
     state = {
         showCreateUrlForm: false,
-        showEditUrlForm: false
+        showEditUrlForm: false,
+        editingUrlCode: null
     }
 
     componentDidMount(){
@@ -28,14 +29,23 @@ class UrlList extends React.Component {
         this.setState({showEditUrlForm: !this.state.showEditUrlForm})
     }
 
+    setEditingUrlCode(code){
+        this.setState({editingUrlCode: code})
+    }
+
+
     render(){
         const urls = this.props.urls;
         const hostUrl = 'http://localhost:5000/u/';
         
+
+        
+
         return(
             <Container>
                 <Col>
                 <h1>Your URLs</h1>
+                <hr/>
                 <h4>{this.props.urlCount} URL{this.props.urlCount === 1 ? '' : 's'}</h4>
 
                 <Button
@@ -56,7 +66,7 @@ class UrlList extends React.Component {
 
                 {
                     this.state.showEditUrlForm ? 
-                        <EditUrlForm showEditUrlForm={this.state.showEditUrlForm} onToggleEditUrlForm={this.onToggleEditUrlForm.bind(this)}/>
+                        <EditUrlForm showEditUrlForm={this.state.showEditUrlForm} onToggleEditUrlForm={this.onToggleEditUrlForm.bind(this)} code={this.state.editingUrlCode}/>
                     :
                     ""
                 }
@@ -71,7 +81,7 @@ class UrlList extends React.Component {
                     <ListGroup>
                     
                     {urls.map((url) => (
-                        <Row key={url.code}><UrlListItem url={url} onToggleEditUrlForm={this.onToggleEditUrlForm.bind(this)}/></Row>
+                        <Row key={url.code}><UrlListItem url={url} onToggleEditUrlForm={this.onToggleEditUrlForm.bind(this)} setEditingUrlCode={this.setEditingUrlCode.bind(this)}/></Row>
                     ))}
                     
                     </ListGroup>        

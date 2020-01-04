@@ -100,7 +100,8 @@ router.put('/edit', ensureAuthenticated, (req, res)=>{
             }
             catch(error){
                 console.log(error)
-                res.status(500).send({message:'Server error.'});
+                res.status(500).send({message:'Server error.',
+                                        error:error});
             }
     }
     else{
@@ -164,22 +165,17 @@ router.post('/analytics', ensureAuthenticated, (req, res) => {
         switch(timeSpan){
             case 'month':
                lowerBoundDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - unitsBackInTime, 1); // first dday of month
-               upperBoundDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - unitsBackInTime + 1, 0);//first of next month
+               upperBoundDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - unitsBackInTime + 1, 1);//first of next month
                format = "MM/DD/YYYY";
                break;
             case 'year':
                 lowerBoundDate = new Date(currentDate.getFullYear() - unitsBackInTime, 0, 1);
-                upperBoundDate = new Date(currentDate.getFullYear() + 1 - unitsBackInTime, 0, 0);
+                upperBoundDate = new Date(currentDate.getFullYear() + 1 - unitsBackInTime, 0, 1);
                 format = "MM/YYYY";
                 break; 
-            case 'eachyear':
-                upperBoundDate = currentDate;
-                lowerBoundDate = new Date(currentDate.getFullYear() + 1 - unitsBackInTime, 0, 1); //earliest is 20 years ago
-                format = "YYYY";
-                break;
             default:
                 //last 30 days
-                upperBoundDate = currentDate;
+                upperBoundDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1);
                 lowerBoundDate = new Date(upperBoundDate.getFullYear(), upperBoundDate.getMonth(), upperBoundDate.getDate()-30);
                 format = "MM/DD/YYYY";
         }
@@ -189,7 +185,7 @@ router.post('/analytics', ensureAuthenticated, (req, res) => {
                 {
                     UrlCode: code,
                     createdAt: {
-                        [Op.lte]: upperBoundDate,
+                        [Op.lt]: upperBoundDate,
                         [Op.gte]: lowerBoundDate
                       }
                 
@@ -204,8 +200,14 @@ router.post('/analytics', ensureAuthenticated, (req, res) => {
                         dateToVisitCount[cleanedVisits[i]] = dateToVisitCount[cleanedVisits[i]] + 1;
                     }
                 }
-            return res.send({dataPoints: dateToVisitCount,
-                            totalVisits: visits.count})
+
+            models.Visit.count({where:{UrlCode: code}}).then((count)=>{
+                return res.send({dataPoints: dateToVisitCount,
+                    timeSpanVisitCount: visits.count,
+                    totalVisitCount: count
+                })
+            })
+                
           })    
       } catch (err) {
         console.error(err);

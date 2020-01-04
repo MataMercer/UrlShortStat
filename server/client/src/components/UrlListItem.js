@@ -71,6 +71,7 @@ class UrlListItem extends React.Component {
 
     onEditClick = (e) => {
         e.stopPropagation();
+        this.props.setEditingUrlCode(this.props.url.code);
         this.props.onToggleEditUrlForm();
     }
 
@@ -103,6 +104,7 @@ class UrlListItem extends React.Component {
                             >
                                 <i className="fas fa-edit"></i>
                             </Button>
+                            <p className="float-right">Created: {moment(this.props.url.createdAt).format('MMM DD, YYYY').toString()}</p>
                     </Col>
                     </Row>
                     
@@ -132,28 +134,21 @@ class UrlListItem extends React.Component {
                    
                     </div>
                     <Collapse isOpen={this.state.isOpen} className="url-list-item-analytics-section">
-
+                    <Row><Col><h4>Visits</h4></Col></Row>
                     <FormGroup>
                         <Label for="timeSpan">Time Period</Label>
                         <Input type="select" name="timeSpan" onChange={this.onChange}>
                         <option value="last30days">Last 30 days</option>
                         <option value="month">Month</option>
                         <option value="year">Year</option>
-                        <option value="eachyear">Each Year</option>
                         </Input>
                         
                         <Label for="unitsBackInTime">Units Back in Time</Label>
                         <Input name="unitsBackInTime" value={this.state.unitsBackInTime} disabled={this.state.timeSpan==='last30days'} onChange={this.onChange} type="number" min="0" max="100"></Input>
                     </FormGroup>
 
-                    <Row><Col><h4>Visits</h4></Col></Row>
-                        <Row>
-                            
-                        
-                    </Row>
-                    <p>{this.state.timeSpan}</p>
-                            
-                               
+                    
+                                     
                         <UrlAnalytics timeSpan={this.state.timeSpan} code={code} unitsBackInTime={this.state.unitsBackInTime}></UrlAnalytics>
                         
                     </Collapse>

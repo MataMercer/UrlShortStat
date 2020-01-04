@@ -1,8 +1,9 @@
 import React from 'react';
-import { Alert, FormGroup, Form, Button, Container, Card, InputGroup, InputGroupAddon, InputGroupText, Input, Spinner } from 'reactstrap';
+import { Alert, FormGroup, Form, Button, Container, Card, InputGroup, InputGroupAddon, InputGroupText, Input, Label, Spinner } from 'reactstrap';
 import {
     BrowserRouter as Router,
     Redirect,
+    Link
 } from 'react-router-dom'
   
 
@@ -71,32 +72,28 @@ class Login extends React.Component{
     
         return (         
           <Container>
-            <Card>
+            
                     <h1>Login</h1>
                     
                     {this.props.location.state ? <Alert color="danger">You must login to view this page.</Alert> : ""}
                     {(this.state.formErrorMessages.length > 0) ? <Alert color="danger">{this.state.formErrorMessages.map((message)=>(<div>{message}<hr /></div>))}</Alert> : ""}
                     <Form onSubmit={this.onSubmit}>
                     <FormGroup>
-
-                    <InputGroup>
-                        <InputGroupAddon addonType="prepend">
-                            <InputGroupText>E</InputGroupText>
-                        </InputGroupAddon>
-                        <Input name="email" placeholder="Email" type="email" onChange={this.onChange}/>
-                    </InputGroup>
-
-                    <InputGroup>
-                        <InputGroupAddon addonType="prepend">
-                            <InputGroupText>P</InputGroupText>
-                        </InputGroupAddon>
-                        <Input name="password" placeholder="Password" type="password" onChange={this.onChange}/>
-                    </InputGroup>
+                          <Label for="email">Email Address</Label>
+                          <Input name="email" placeholder="" id="email" type="email" onChange={this.onChange}/>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="password">Password</Label>
+                        <Input name="password" placeholder="" type="password" id="password" onChange={this.onChange}/>
+                    </FormGroup>
 
                     <Button>Log in</Button>
-                    </FormGroup>
+                   
                     </Form>
-                </Card>
+
+                    <hr/>
+                    <p>Don't have an account? Register <Link to="/register">here</Link>.</p>
+            
           </Container>
         )
       }

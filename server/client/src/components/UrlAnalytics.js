@@ -33,7 +33,9 @@ class UrlAnalytics extends React.Component {
         const body = {
             code: this.props.code,
             timeSpan: this.props.timeSpan,
-            unitsBackInTime: this.props.unitsBackInTime
+            unitsBackInTime: this.props.unitsBackInTime,
+            timeSpanVisitCount: 0,
+            totalVisitCount: 0
         }
         return axios
         .post(config.serverUrl + '/api/url/analytics/', body)
@@ -49,12 +51,13 @@ class UrlAnalytics extends React.Component {
             let upperBoundDate = null;
             let format = null;
             const currentDate = new Date();
+            let date = null;
             switch(this.props.timeSpan){
                 case 'month':
                    lowerBoundDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - this.props.unitsBackInTime, 1); // first dday of month
                    upperBoundDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - this.props.unitsBackInTime + 1, 0);//first of next month
                    format = "MM/DD/YYYY";
-                   let date = new Date(upperBoundDate.getFullYear(), upperBoundDate.getMonth(), upperBoundDate.getDate());
+                   date = new Date(upperBoundDate.getFullYear(), upperBoundDate.getMonth(), upperBoundDate.getDate());
                    for(let i = 0; date > lowerBoundDate; i++){
                     date = new Date(upperBoundDate.getFullYear(), upperBoundDate.getMonth(), upperBoundDate.getDate()-i);
                     const formattedDate = moment(date).format(format).toString();
@@ -71,16 +74,22 @@ class UrlAnalytics extends React.Component {
                 case 'year':
                     lowerBoundDate = new Date(currentDate.getFullYear() - this.props.unitsBackInTime, 0, 1);
                     upperBoundDate = new Date(currentDate.getFullYear() + 1 - this.props.unitsBackInTime, 0, 0);
-                    format = "MM/YYYY";
+                    //even though the units is by month, chartjs wants the day to be included for some reason. chartjs will not read MM/YYYY, only MM/DD/YYYY. 
+                    format = "MM/DD/YYYY";
+                    date = new Date(upperBoundDate.getFullYear(), upperBoundDate.getMonth());
+                    for(let i = 0; date > lowerBoundDate; i++){
+                        date = new Date(upperBoundDate.getFullYear(), upperBoundDate.getMonth()-i);
+                        const formattedDate = moment(date).format(format).toString();
+                        //the server still goes by this format in its response. MM/YYYY
+                        const resFormattedDate = moment(date).format('MM/YYYY').toString();
+                        if(!(resFormattedDate in dataPointsRes)){
+                            dataPoints[formattedDate] = 0;
+                        }else{
+                            dataPoints[formattedDate] = dataPointsRes[resFormattedDate];
+                        }
+                    }
+
                     break; 
-                case 'eachyear':
-                    upperBoundDate = currentDate;
-                    lowerBoundDate = new Date(currentDate.getFullYear() + 1 - this.props.unitsBackInTime, 0, 1); //earliest is 20 years ago
-                    format = "YYYY";
-
-
-
-                    break;
                 default:
                     //last 30 days
                     upperBoundDate = currentDate;
@@ -111,7 +120,7 @@ class UrlAnalytics extends React.Component {
                 })
             }
          
-            return data;
+            return {data, totalVisitCount: res.data.totalVisitCount, timeSpanVisitCount: res.data.timeSpanVisitCount};
         
             
         })
@@ -121,23 +130,33 @@ class UrlAnalytics extends React.Component {
         });
 
     }
-     
+    
+    getXAxisLabel(){
+        switch(this.props.timeSpan){
+            case 'month':
+                return 'Days'
+            case 'year':
+                return 'Months'
+            default:
+                return 'Days'
+        }
+    }
+
+    getUnits(){
+        
+        switch(this.props.timeSpan){
+            case 'month':
+                return 'day'
+            case 'year':
+                return 'month'
+            default:
+                return 'day'
+        }
+    }
 
     initChart(){
         const myChartRef = this.chartRef.current.getContext("2d");
-        var timeFormat = 'MM/DD/YYYY';
 
-		function newDate(days) {
-			return moment().subtract(days, 'd').toDate();
-		}
-
-		function newDateString(days) {
-			return moment().subtract(days, 'd').format(timeFormat);
-        }
-        
-        function psqlToDate(psqlDate){
-            return moment(psqlDate).format(timeFormat);
-        }
         // var color = Chart.helpers.color;
         const lineColor = '#69cfff';
         var config = {
@@ -158,16 +177,24 @@ class UrlAnalytics extends React.Component {
                 
                 scales: {
                     xAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: this.getXAxisLabel()
+                          },
                         type: 'time',
                         time: {
                             unit: 'day',
                             unitStepSize: 1,
                             displayFormats: {
-                            'day': 'MM/DD/YY'
+                            'day': 'MMM DD YY'
                             }
                         }
                     }],
                     yAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Number of Visits'
+                          },
                         ticks: {
                             beginAtZero: true
                         }
@@ -180,23 +207,56 @@ class UrlAnalytics extends React.Component {
 
     }
 
+ 
+
     async updateData(){
+
         if(this.chart){
+            this.chart.options.title = {
+                text: 'Visits',
+                display: true
+            };
+
+            this.chart.options.scales = {
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: this.getXAxisLabel()
+                      },
+                    type: 'time',
+                    time: {
+                        unit: this.getUnits(),
+                        unitStepSize: 1,
+                        displayFormats: {
+                        day: 'MMM DD, YYYY',
+                        month: 'MMM YYYY'
+                        }
+                    }
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Number of Visits'
+                      },
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            };
+
             const analytics = await this.getAnalytics();
             console.log(analytics);
             this.chart.data.datasets.forEach((dataset) => {
                 dataset.data.pop();
-                dataset.data = analytics;
+                dataset.data = analytics.data;
             });
             this.chart.update();
+            // this.setState({timeSpanVisitCount:analytics.timeSpanVisitCount, totalVisitCount: analytics.totalVisitCount})
         }
     }
 
 
     componentDidMount(){
-        this.initChart()
-
-
         this.initChart();
         this.updateData();
 
@@ -212,7 +272,6 @@ class UrlAnalytics extends React.Component {
         return(
                     <Row>
                     <Col>
-                    <h4>{this.props.timeSpan}</h4>
                         <div onClick={(e) => {e.stopPropagation();}} >
                         
                         <canvas
@@ -220,6 +279,8 @@ class UrlAnalytics extends React.Component {
                             ref={this.chartRef}
                         />
                         </div>
+
+                        {this.state.totalVisitCount}
                     </Col>
                     </Row>
                     

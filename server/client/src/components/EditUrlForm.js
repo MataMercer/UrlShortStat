@@ -34,7 +34,7 @@ class EditUrlForm extends React.Component{
 
         const newUrl = {
             originalUrl: this.state.originalUrl,
-            customUrl: this.state.customUrl,
+            code: this.props.code,
         }
 
 
@@ -56,6 +56,7 @@ class EditUrlForm extends React.Component{
         <Modal isOpen={this.props.showEditUrlForm} toggle={this.props.onToggleEditUrlForm}>
             <ModalBody>
                 <ModalHeader toggle={this.props.onToggleEditUrlForm}>Edit URL</ModalHeader>
+                <h4>{this.props.code}</h4>
                 {(this.state.formErrorMessages.length > 0) ? 
                     <Alert color="danger">
                         {this.state.formErrorMessages.map((message)=>(<div>{message}<hr /></div>))}

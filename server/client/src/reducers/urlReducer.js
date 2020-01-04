@@ -43,7 +43,7 @@ export default function(state = initialState, action){
                             originalUrl: action.payload.originalUrl,
                             code: action.payload.code
                         },
-                        ...state.urls.filter((url)=>url.code===action.payload.code)],
+                        ...state.urls.filter((url)=>url.code!==action.payload.code)],
                     loading: false
                 }
             }else{

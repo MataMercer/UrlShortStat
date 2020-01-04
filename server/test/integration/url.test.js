@@ -47,7 +47,7 @@ describe('Edit route', () =>{
 
 
     const createUrl = (code, originalUrl) => {
-        // console.log(error);
+
         validUrl = {
             customUrl: code,
             originalUrl: originalUrl  
@@ -66,7 +66,7 @@ describe('Edit route', () =>{
         await logoutUser();
         await registerUser(validUser2);
         await logoutUser();
-        console.log('derp');;
+
     
     });
     
@@ -209,7 +209,7 @@ describe('Delete route', () =>{
 
 
     const createUrl = (urlCode) => {
-        // console.log(error);
+
         validUrl = {
             customUrl: urlCode,
             originalUrl: 'https://www.google.com/'  
@@ -228,7 +228,7 @@ describe('Delete route', () =>{
         await logoutUser();
         await registerUser(validUser2);
         await logoutUser();
-        console.log('derp');;
+
     
     });
     
@@ -303,11 +303,11 @@ describe('Analytics route', () => {
             .type('application/json')
             .send(validUser)
             .then((error, response) => {
-                // console.log(error)
+          
             });
     };
     const createUrl = () => {
-        // console.log(error);
+     
         const visitUrlCode = 1;
         validUrl = {
             customUrl: visitUrlCode,
@@ -378,7 +378,7 @@ describe('Analytics route', () => {
     
 
     //test visits that happened in last 31 days regardless of month
-    it('Returns a 200 response and a map of visit counts by day that occurred in the last 31 days of the baseDate.', (done) => {
+    it('Returns a 200 response and a map of visit counts by day that occurred in the last 30 days of the baseDate.', (done) => {
         // models.Visit.findAndCountAll()
         // .then((result)=>{
         //     // console.log(result.rows.map((visit)=>visit.get("createdAt").toString()));
@@ -392,15 +392,15 @@ describe('Analytics route', () => {
         }
 
         agent
-            .get('/api/url/analytics')
+            .post('/api/url/analytics')
             .type('application/json')
             .send(body)
             .end((error, response) => {
                 if (error) done(error);
                 expect(response).to.have.status(200);
-                expect(Object.keys(response.body.dataPoints).length).to.be.equal(31);
-                const totalVisits = Object.values(response.body.dataPoints).reduce((a, b) => a+b);
-                expect(response.body.totalVisits).to.be.equal(totalVisits);
+                expect(Object.keys(response.body.dataPoints).length).to.be.equal(30);
+                // const totalVisits = Object.values(response.body.dataPoints).reduce((a, b) => a+b);
+                // expect(response.body.totalVisits).to.be.equal(totalVisits);
                 done();
             });
 
@@ -416,7 +416,7 @@ describe('Analytics route', () => {
         }
 
         agent
-            .get('/api/url/analytics')
+            .post('/api/url/analytics')
             .type('application/json')
             .send(body)
             .end((error, response) => {
@@ -424,8 +424,8 @@ describe('Analytics route', () => {
                 expect(response).to.have.status(200);
                 //the base date is 15 days into december, so it should return at 15 days in the month.
                 expect(Object.keys(response.body.dataPoints).length).to.be.equal(baseDate.getDate());
-                const totalVisits = Object.values(response.body.dataPoints).reduce((a, b) => a+b);
-                expect(response.body.totalVisits).to.be.equal(totalVisits);
+                // const totalVisits = Object.values(response.body.dataPoints).reduce((a, b) => a+b);
+                // expect(response.body.totalVisits).to.be.equal(totalVisits);
                 done();
             });
     });
@@ -440,7 +440,7 @@ describe('Analytics route', () => {
         }
 
         agent
-            .get('/api/url/analytics')
+            .post('/api/url/analytics')
             .type('application/json')
             .send(body)
             .end((error, response) => {
@@ -448,8 +448,8 @@ describe('Analytics route', () => {
                 expect(response).to.have.status(200);
                 //there is at least 1 visit in each month, should return 1 for october since we only inserted oonce for that month.
                 expect(Object.keys(response.body.dataPoints).length).to.be.equal(1);
-                const totalVisits = Object.values(response.body.dataPoints).reduce((a, b) => a+b);
-                expect(response.body.totalVisits).to.be.equal(totalVisits);
+                // const totalVisits = Object.values(response.body.dataPoints).reduce((a, b) => a+b);
+                // expect(response.body.totalVisits).to.be.equal(totalVisits);
                 done();
             });
     });
@@ -465,7 +465,7 @@ describe('Analytics route', () => {
         }
 
         agent
-            .get('/api/url/analytics')
+            .post('/api/url/analytics')
             .type('application/json')
             .send(body)
             .end((error, response) => {
@@ -476,30 +476,5 @@ describe('Analytics route', () => {
                 done();
             });
     });
-
-    it('Returns a 200 response and a map of visit counts by year that occurred in the past 5 years.', (done) => {
-        const body = {
-            timeSpan: "eachyear", 
-            unitsBackInTime: 5, 
-            code: visitUrlCode,
-            date: baseDate
-        }
-
-        agent
-            .get('/api/url/analytics')
-            .type('application/json')
-            .send(body)
-            .end((error, response) => {
-                if (error) done(error);
-                expect(response).to.have.status(200);
-                //there is at least 1 visit in each month, should return 1 for october since we only inserted oonce for that month.
-                expect(Object.keys(response.body.dataPoints).length).to.be.equal(5);
-                const totalVisits = Object.values(response.body.dataPoints).reduce((a, b) => a+b);
-                expect(response.body.totalVisits).to.be.equal(totalVisits);
-                done();
-            });
-    });
-
-
 
 });
