@@ -1,38 +1,40 @@
-import { USER_REGISTER, USER_LOADING, USER_LOGIN, USER_LOGOUT, USER_EDIT, USER_CHECK_SESSION } from "../actions/types";
+import { UserState } from "../types/User";
+import { UserActionTypes } from "../types/actions";
 
-const initialState = {
+
+const initialState:UserState = {
     name: '',
     loading: false,
     email: ''
 }
 
-export default function(state = initialState, action){
+export default function(state:UserState = initialState, action:UserActionTypes){
     switch(action.type){
-        case USER_REGISTER:
+        case 'USER_REGISTER':
             return {
                 ...state,
                 name: action.payload ? action.payload.name : '',
                 loading: false
             };
-        case USER_LOGIN:
+        case "USER_LOGIN":
             return {
                 ...state,
                 name: action.payload ? action.payload.name : '',
                 loading: false
             }
-        case USER_LOGOUT:
+        case 'USER_LOGOUT':
             return {
                 ...state,
-                name: action.payload === '' ? '' : state.name,
+                name: '',
                 loading: false
             }
-        case USER_EDIT:
+        case 'USER_EDIT':
             return {
                 ...state,
                 name: action.payload ? action.payload.name : state.name,
                 loading: false
             }
-        case USER_CHECK_SESSION:
+        case 'USER_CHECK_SESSION':
       
             return {
                 ...state,
@@ -40,7 +42,7 @@ export default function(state = initialState, action){
                 email: action.payload ? action.payload.email : '',
                 loading: false
             }      
-        case USER_LOADING:
+        case 'USER_LOADING':
             return {
                 ...state,
                 loading: true
