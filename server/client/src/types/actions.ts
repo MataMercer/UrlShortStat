@@ -7,6 +7,7 @@ export const USER_REGISTER = 'USER_REGISTER';
 export const USER_LOGOUT = 'USER_LOGOUT';
 export const USER_LOADING = 'USER_LOADING';
 export const USER_EDIT = 'USER_EDIT';
+export const USER_DELETE = 'USER_DELETE';
 export const USER_CHECK_SESSION = 'USER_CHECK_SESSION';
 export const USER_ERROR = 'USER_ERROR';
 export interface UserLoginAction {
@@ -33,6 +34,10 @@ export interface UserEditAction {
 	payload: User;
 }
 
+export interface UserDeleteAction {
+	type: typeof USER_DELETE;
+}
+
 export interface UserCheckSessionAction {
 	type: typeof USER_CHECK_SESSION;
 	payload: User;
@@ -40,7 +45,7 @@ export interface UserCheckSessionAction {
 
 export interface UserErrorAction {
 	type: typeof USER_ERROR;
-	payload: string;
+	payload: string[];
 }
 
 export type UserActionTypes =
@@ -49,6 +54,7 @@ export type UserActionTypes =
 	| UserLogoutAction
 	| UserLoadingAction
 	| UserEditAction
+	| UserDeleteAction
 	| UserCheckSessionAction
 	| UserErrorAction;
 //URL
@@ -87,7 +93,7 @@ export interface UrlLoadingAction {
 
 export interface UrlErrorAction {
 	type: typeof URL_ERROR;
-	error: string;
+	error: [];
 }
 
 export type UrlActionTypes =

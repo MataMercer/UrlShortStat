@@ -27,14 +27,18 @@ export const editUser = (user: User): AppActions => ({
 	payload: user,
 });
 
+export const deleteUser = (): AppActions => ({
+	type: 'USER_DELETE'
+});
+
 export const checkUserSession = (user: User): AppActions => ({
 	type: 'USER_CHECK_SESSION',
 	payload: user,
 });
 
-export const setUserError = (error: string): AppActions => ({
+export const setUserError = (errors: string[]|string): AppActions => ({
 	type: 'USER_ERROR',
-	payload: error,
+	payload: (errors instanceof Array ? errors as string[] : [errors as string]),
 });
 
 export const setUserLoading = (error: string): AppActions => ({
@@ -54,7 +58,7 @@ export const startRegisterUser = (
 		})
 		.catch(error => {
 			console.log(error.response);
-			dispatch(setUserError(error.response));
+			dispatch(setUserError(error.response.data.message));
 		});
 };
 
@@ -72,7 +76,7 @@ export const startLoginUser = (
 		})
 		.catch(error => {
 			console.log(error.response);
-			dispatch(setUserError(error.response));
+			dispatch(setUserError(error.response.data.message));
 		});
 };
 
@@ -91,7 +95,7 @@ export const startLogoutUser = (): ThunkAction<
 		})
 		.catch(error => {
 			console.log(error.response);
-			dispatch(setUserError(error.response));
+			dispatch(setUserError(error.response.data.message));
 		});
 };
 
@@ -109,7 +113,24 @@ export const startEditUser = (
 		})
 		.catch(error => {
 			console.log(error.response);
-			dispatch(setUserError(error.response));
+			dispatch(setUserError(error.response.data.message));
+		});
+};
+
+export const startDeleteUser = (
+): ThunkAction<Promise<void>, void, void, AppActions> => (
+	dispatch: Dispatch<AppActions>
+): Promise<void> => {
+	// dispatch(setUserLoading());
+
+	return axios
+		.delete(serverUrl + '/')
+		.then(res => {
+			dispatch(deleteUser());
+		})
+		.catch(error => {
+			console.log(error.response);
+			dispatch(setUserError(error.response.data.message));
 		});
 };
 
@@ -129,6 +150,6 @@ export const startCheckUserSession = (): ThunkAction<
 		})
 		.catch(error => {
 			console.log(error.response);
-			dispatch(setUserError(error.response));
+			dispatch(setUserError(error.response.data.message));
 		});
 };

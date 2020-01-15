@@ -28,7 +28,7 @@ type RegisterState = {
 	email: string;
 	password: string;
 	password2: string;
-	formErrorMessages: string[]; 
+	errors: string[]; 
 }
 
 type Props = RegisterProps & LinkDispatchProps & LinkStateProp & RouteComponentProps<{}> & React.Props<{}>;
@@ -39,7 +39,7 @@ class Register extends Component<Props, RegisterState> {
 		email: '',
 		password : '',
 		password2: '',
-		formErrorMessages: []
+		errors: []
 	}
 
 	onChange = (e:React.ChangeEvent<HTMLInputElement>):void =>  {
@@ -80,7 +80,7 @@ class Register extends Component<Props, RegisterState> {
 		}
 
 		if (errors.length > 0) {
-			this.setState({ formErrorMessages: errors });
+			this.setState({ errors });
 			return;
 		}
 		
@@ -94,7 +94,12 @@ class Register extends Component<Props, RegisterState> {
 		// 	this.setState({ formErrorMessages: error.response.data.message });
 		// else this.props.history.push('/dashboard');
 		//redir
-		this.props.history.push('/dashboard');
+		if(this.props.errors.length > 0){
+			this.setState({errors: this.props.errors})
+		}else{
+			this.props.history.push('/dashboard');
+		}
+		
 	};
 
 	render() {
@@ -108,12 +113,12 @@ class Register extends Component<Props, RegisterState> {
 			return (
 				<Container>
 					<h1>Register</h1>
-					{this.state.formErrorMessages.length > 0 ? (
+					{this.state.errors.length > 0 ? (
 						<Alert color="danger">
-							{this.state.formErrorMessages.map(message => (
+							{this.state.errors.map((message, index) => (
 								<div>
 									{message}
-									<hr />
+									{index !== this.state.errors.length -1 ? <hr />: null}
 								</div>
 							))}
 						</Alert>
@@ -129,6 +134,7 @@ class Register extends Component<Props, RegisterState> {
 								id="name"
 								type="text"
 								onChange={this.onChange}
+								value={this.state.name}
 							/>
 						</FormGroup>
 
@@ -140,6 +146,7 @@ class Register extends Component<Props, RegisterState> {
 								type="email"
 								id="email"
 								onChange={this.onChange}
+								value={this.state.email}
 							/>
 						</FormGroup>
 
@@ -151,17 +158,19 @@ class Register extends Component<Props, RegisterState> {
 								id="password"
 								type="password"
 								onChange={this.onChange}
+								value={this.state.password}
 							/>
 						</FormGroup>
 
 						<FormGroup>
-							<Label for="password2">Password</Label>
+							<Label for="password2">Retype Password</Label>
 							<Input
 								name="password2"
 								placeholder="Retype password"
 								type="password"
 								id="password2"
 								onChange={this.onChange}
+								value={this.state.password2}
 							/>
 						</FormGroup>
 
@@ -187,6 +196,7 @@ class Register extends Component<Props, RegisterState> {
 interface LinkStateProp {
 	loading: boolean;
 	name?: string;
+	errors: string[];
 }
 
 interface LinkDispatchProps {
@@ -198,7 +208,8 @@ const mapStateToProps = (
 	ownProps: RegisterProps
 ): LinkStateProp => ({
 	loading: state.user.loading,
-	name: state.user.name
+	name: state.user.name,
+	errors: state.user.errors
 });
 
 const mapDispatchToProps = (

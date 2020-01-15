@@ -33,9 +33,9 @@ export const setUrlLoading = (): AppActions => ({
 	type: 'URL_LOADING',
 });
 
-export const setUrlError = (error: string): AppActions => ({
-	type: 'URL_ERROR',
-	error,
+export const setUrlError = (errors: string[]|string): AppActions => ({
+	type: 'USER_ERROR',
+	payload: (errors instanceof Array ? errors as string[] : [errors as string]),
 });
 
 export const startGetUrls = (): ThunkAction<

@@ -1,7 +1,4 @@
-
-
-
-$font-stack:    Helvetica, sans-serif;
+$font-stack: Helvetica, sans-serif;
 $primary-color: #527474;
 $custom-border-radius: 10px;
 $primary: #09d3ac;
@@ -15,94 +12,131 @@ $loading-bar-z-index: 1031;
 @import 'custom-variables';
 @import '../../node_modules/bootstrap/scss/bootstrap';
 @import 'custom-styles';
-/* .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-} */
-.page-content{
-  background-color: white;
-  padding: 0.8rem;
-  min-height: 100vh;
- 
-  
+
+.page-content {
+	background-color: white;
+	padding-top: 0.8rem;
+	min-height: 100vh;
 }
 
-.current-nav-link{
-  color: white;
-  background-color: $primary-color;
-  border-radius: $custom-border-radius;
-  padding: 0.4rem 0.8rem 0.4rem ;
+.nav-item {
+	margin: 0.4rem 0.8rem 0.4rem;
 }
 
-.url-list-item{
-  background-color: $url-list-item-color; 
-  border-radius: $custom-border-radius;
-  padding: 0.4rem;
-  margin-top: 0.5rem;
-  word-wrap: break-word;
+.current-nav-link {
+	color: white;
+	background-color: $primary-color;
+	border-radius: 4rem;
+	// padding: 0.4rem 0.8rem 0.4rem ;
+	// text-decoration: underline;
 }
 
-.url-list-item-analytics-section{
-  background-color: darken($url-list-item-color, 6%); 
-
+.current-nav-link:hover {
+	text-decoration: none;
+	color: white;
+	// padding: 0.4rem 0.8rem 0.4rem ;
+	// text-decoration: underline;
 }
 
-
-
-
-
-.url-list-item:hover{
-  background-color: darken($url-list-item-color, 3%);;
+.url-list-item {
+	background-color: $url-list-item-color;
+	border-radius: $custom-border-radius;
+	
+	margin-top: 0.5rem;
+	word-wrap: break-word;
 }
 
-#navbar{
-  background-color: $url-list-item-color;
-  position: fixed;
-  z-index: $loading-bar-z-index - 1;
-  top: 0px;
-   width: 100%;
-   box-shadow: 0px 4px 4px rgba(0, 0, 0, .1);
+.url-list-item-analytics-section {
+	background-color: darken($url-list-item-color, 6%);
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	border-bottom-left-radius: $custom-border-radius;
+	border-bottom-right-radius: $custom-border-radius;
 }
 
-.copy-button{
-  margin-left: 0.5rem;
-  border-radius: 50px !important;
+.url-list-item-header{
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	border-radius: $custom-border-radius;
+}
+
+.url-list-item-header-opened{
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	border-radius: $custom-border-radius;
+}
+
+.url-list-item-header-opened:hover {
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	background-color: darken($url-list-item-color, 3%);
+	border-bottom-left-radius: 0%;
+	border-bottom-right-radius: 0%;
+}
+
+.url-list-item-header:hover {
+	background-color: darken($url-list-item-color, 3%);
+	border-bottom-left-radius: $custom-border-radius;
+	border-bottom-right-radius: $custom-border-radius;
+}
+
+#navbar {
+	background-color: $url-list-item-color;
+	position: fixed;
+	z-index: $loading-bar-z-index - 1;
+	top: 0px;
+	width: 100%;
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.copy-button {
+	margin-left: 0.5rem;
+	border-radius: 50px;
 }
 
 .modal-dialog {
-  margin-top: 10rem !important;
+	margin-top: 10rem;
 }
 
-.App{
-  margin-top: 2.5rem;
-  background-color: $primary-color;
-  background-attachment: fixed;
-  background-position: center top;
+.App {
+	margin-top: 2.5rem;
+	background-color: $primary-color;
+	background-attachment: fixed;
+	background-position: center top;
 }
 
 .App-link {
-  color: #09d3ac;
+	color: #09d3ac;
 }
 
-.navbarLogo{
-  width: 2.4rem;
-  padding: 0.5rem;
-  border-radius: 30%;
+.navbarLogo {
+	width: 2.4rem;
+	padding: 0.5rem;
+	border-radius: 30%;
 }
 
-.url-list-item-chart{
-  background: white;
-  padding: 5px;
-  border-radius: $custom-border-radius;
+.url-list-item-chart {
+	background: white;
+	padding: 5px;
+	border-radius: $custom-border-radius;
 }
 
 // loading bar
 #nprogress .bar {
-  background:$primary;
+	background: $primary;
+}
+
+.fade-enter {
+	opacity: 0;
+	z-index: 1;
+}
+
+.fade-enter-active {
+	opacity: 1;
+	transition: opacity 250ms ease-in;
+}
+
+.fade-exit {
+	opacity: 0;
+	z-index: 1;
 }

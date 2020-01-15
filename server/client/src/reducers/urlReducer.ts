@@ -4,7 +4,7 @@ const initialState: UrlState = {
 	urls: [],
 	urlCount: 0,
 	loading: false,
-	errors: '',
+	errors: [],
 };
 
 export default function(state:UrlState = initialState, action: UrlActionTypes) {

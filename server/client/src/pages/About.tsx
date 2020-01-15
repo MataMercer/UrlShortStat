@@ -11,8 +11,14 @@ class About extends React.Component{
     render(){
         return(
             <Container>
-            <h1>About URLShortStat</h1>
-            <p>Under construction</p>
+                <h1>About</h1>
+            <h2>About UrlShortStat</h2>
+            <p>UrlShortStat is an app to shorten URLs and track viewership. It is open source through the GNU license and the code is available 
+                <a href="https://github.com/MataMercer/UrlShortStat"> here</a>. 
+            </p>
+
+            <h2>Contact Creator</h2>
+            <p>UrlShortStat was created as a personal project by MataMercer (Mercer Denholm). If you have any questions, feel free to contact him through email or his Github.</p>
             </Container>
         );
     }

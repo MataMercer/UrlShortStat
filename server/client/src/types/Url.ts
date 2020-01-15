@@ -16,5 +16,5 @@ export interface UrlState{
     urls: Url[],
 	urlCount: number,
 	loading: boolean,
-	errors: string,
+	errors: string[],
 }

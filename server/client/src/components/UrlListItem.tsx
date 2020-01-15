@@ -81,6 +81,10 @@ class UrlListItem extends Component<Props, UrlListItemState> {
 		this.props.onToggleEditUrlForm();
 	};
 
+	stopPropagationClick = (e: React.MouseEvent<any, MouseEvent>) =>{
+		e.stopPropagation();
+	}
+
 	render() {
 		const code = this.props.url.code;
 		const originalUrl = this.props.url.originalUrl;
@@ -89,7 +93,7 @@ class UrlListItem extends Component<Props, UrlListItemState> {
 		return (
 			<Container>
 				<div onClick={this.toggle.bind(this)} className="url-list-item">
-					<Col>
+					<Col className={this.state.isOpen ? "url-list-item-header-opened" : "url-list-item-header"}>
 						<Row>
 							<Col>
 								<Button
@@ -108,7 +112,7 @@ class UrlListItem extends Component<Props, UrlListItemState> {
 								>
 									<i className="fas fa-edit"></i>
 								</Button>
-								<p className="float-right">
+								<p>
 									Created:{' '}
 									{moment(this.props.url.createdAt)
 										.format('MMM DD, YYYY')
@@ -156,11 +160,13 @@ class UrlListItem extends Component<Props, UrlListItemState> {
 								: originalUrl}
 						</p>
 					</Col>
-				</div>
+				
 				<Collapse
 					isOpen={this.state.isOpen}
 					className="url-list-item-analytics-section"
+					onClick={this.stopPropagationClick.bind(this)}
 				>
+					<Col>
 					<Row>
 						<Col>
 							<h4>Visits</h4>
@@ -185,13 +191,19 @@ class UrlListItem extends Component<Props, UrlListItemState> {
 							max="100"
 						></Input>
 					</FormGroup>
-
-					<UrlAnalytics
-						timeSpan={this.state.timeSpan}
-						code={code}
-						unitsBackInTime={this.state.unitsBackInTime}
-					></UrlAnalytics>
+					
+					{!this.props.loading ? 
+					(<UrlAnalytics
+					timeSpan={this.state.timeSpan}
+					code={code}
+					unitsBackInTime={this.state.unitsBackInTime}
+				></UrlAnalytics>)
+					
+					: <Spinner></Spinner>}
+					
+					</Col>
 				</Collapse>
+				</div>
 			</Container>
 		);
 	}

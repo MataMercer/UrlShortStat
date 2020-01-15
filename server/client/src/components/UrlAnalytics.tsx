@@ -28,24 +28,20 @@ type UrlAnalyticsProps = {
 };
 
 type UrlAnalyticsState = {
-    loading: boolean;
-    chart?: Chart;
+	loading: boolean;
+	chart?: Chart;
 };
 
 type Props = UrlAnalyticsProps & LinkDispatchProps & LinkStateProp;
 class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 	chartRef: React.RefObject<HTMLCanvasElement> = React.createRef();
-	
+
 	state: UrlAnalyticsState = {
-        loading: false,
-        chart: undefined
-    };
-    
+		loading: false,
+		chart: undefined,
+	};
 
-
-
-
-	getAnalytics():Promise<Analytics | null> {
+	getAnalytics(): Promise<Analytics | null> {
 		const body = {
 			code: this.props.code,
 			timeSpan: this.props.timeSpan,
@@ -169,7 +165,7 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 						}
 				}
 
-				let data= [];
+				let data = [];
 				for (let key in dataPoints) {
 					data.push({
 						x: key,
@@ -177,13 +173,13 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 					});
 				}
 
-                const analyticsResult:Analytics ={
+				const analyticsResult: Analytics = {
 					data,
 					totalVisitCount: res.data.totalVisitCount,
 					timeSpanVisitCount: res.data.timeSpanVisitCount,
-                };
+				};
 
-                return analyticsResult;
+				return analyticsResult;
 			})
 			.catch(error => {
 				console.log(error.response);
@@ -214,7 +210,9 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 	}
 
 	initChart(): void {
-		const myChartRef = this.chartRef.current!.getContext('2d') as CanvasRenderingContext2D;
+		const myChartRef = this.chartRef.current!.getContext(
+			'2d'
+		) as CanvasRenderingContext2D;
 
 		// var color = Chart.helpers.color;
 		const lineColor = '#69cfff';
@@ -266,63 +264,63 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 		this.state.chart = new Chart(myChartRef, config);
 	}
 
-	async updateData(): Promise<void>{
-        if(!this.state.chart){
-            return;
-        }
+	async updateData(): Promise<void> {
+		if (!this.state.chart) {
+			return;
+		}
 
-        this.state.chart.options.scales = {
-            xAxes: [
-                {
-                    scaleLabel: {
-                        display: true,
-                        labelString: this.getXAxisLabel(),
-                    },
-                    type: 'time',
-                    time: {
-                        unit: this.getUnits(),
-                        unitStepSize: 1,
-                        displayFormats: {
-                            day: 'MMM DD, YYYY',
-                            month: 'MMM YYYY',
-                        },
-                    },
-                },
-            ],
-            yAxes: [
-                {
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Number of Visits',
-                    },
-                    ticks: {
-                        beginAtZero: true,
-                    },
-                },
-            ],
-        };
-        
-        const analytics = await this.getAnalytics();
-        console.log(analytics);
-        if(!analytics){
-            return;
-        }
-        // this.state.chart.data.datasets.forEach((dataset:Chart.ChartDataSets) => {
-        //     dataset.data.pop();
-        //     dataset.data = analytics.data;
-        // });
-        const lineColor = '#69cfff';
-        this.state.chart.data.datasets = [{
-                label: 'Visits',
-                backgroundColor: lineColor,
-                borderColor: lineColor,
-                fill: false,
-                data: analytics.data,
-            }]
+		this.state.chart.options.scales = {
+			xAxes: [
+				{
+					scaleLabel: {
+						display: true,
+						labelString: this.getXAxisLabel(),
+					},
+					type: 'time',
+					time: {
+						unit: this.getUnits(),
+						unitStepSize: 1,
+						displayFormats: {
+							day: 'MMM DD, YYYY',
+							month: 'MMM YYYY',
+						},
+					},
+				},
+			],
+			yAxes: [
+				{
+					scaleLabel: {
+						display: true,
+						labelString: 'Number of Visits',
+					},
+					ticks: {
+						beginAtZero: true,
+					},
+				},
+			],
+		};
 
-        this.state.chart.update();
-        // this.setState({timeSpanVisitCount:analytics.timeSpanVisitCount, totalVisitCount: analytics.totalVisitCount})
-    
+		const analytics = await this.getAnalytics();
+		if (!analytics) {
+			return;
+		}
+		// this.state.chart.data.datasets.forEach((dataset:Chart.ChartDataSets) => {
+		//     dataset.data.pop();
+		//     dataset.data = analytics.data;
+		// });
+		const lineColor = '#69cfff';
+		this.state.chart.data.datasets = [
+			{
+				label: 'Visits',
+				backgroundColor: lineColor,
+				borderColor: lineColor,
+				fill: false,
+				data: analytics.data,
+			},
+		];
+
+		this.state.chart.update();
+		// this.setState({timeSpanVisitCount:analytics.timeSpanVisitCount, totalVisitCount: analytics.totalVisitCount})
 	}
 
 	componentDidMount() {

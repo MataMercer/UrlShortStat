@@ -50,22 +50,23 @@ class AppNavbar extends Component<Props, AppNavbarState> {
 					</NavLink>
 
 					<NavLink activeClassName={'current-nav-link'} to="/dashboard">
-						Dashboard
+						<NavItem>Dashboard</NavItem>
 					</NavLink>
 
 					<NavLink activeClassName={'current-nav-link'} to="/about">
 						<NavItem>About</NavItem>
 					</NavLink>
-
-					<NavItem>
-						<div
-							onClick={()=>{this.props.startLogoutUser().then(()=>{
-								history.push('/')
-							})}}
-						>
-							Log out
-						</div>
-					</NavItem>
+					<NavLink to="/" onClick={()=>{this.props.startLogoutUser().then(()=>{
+									history.push('/')
+								})}}>
+						<NavItem>
+							<div
+								
+							>
+								Log out
+							</div>
+						</NavItem>
+					</NavLink>
 				</Nav>
 			) : (
 				<Nav navbar={true}>

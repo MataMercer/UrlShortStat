@@ -9,4 +9,5 @@ export interface UserState{
 	name?: string;
 	loading: boolean;
 	email?: string;
+	errors: string[];
 }

@@ -47,8 +47,7 @@ class UrlList extends Component<Props, UrlListState> {
 		const urls = this.props.urls;
 
 		return (
-			<Container>
-				<Col>
+			<div>
 					<h1>Your URLs</h1>
 					<hr />
 					<h4>
@@ -96,9 +95,8 @@ class UrlList extends Component<Props, UrlListState> {
 								</Row>
 							))}
 						</ListGroup>
-					)}
-				</Col>
-			</Container>
+					)}	
+			</div>
 		);
 	}
 }

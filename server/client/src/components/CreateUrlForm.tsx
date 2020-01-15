@@ -75,8 +75,8 @@ class CreateUrlForm extends Component<Props, CreateUrlFormState> {
 			code: this.state.customUrl,
 		};
 
-        await this.props.startCreateUrl(newUrl);
-        //add error/show errors
+		await this.props.startCreateUrl(newUrl);
+		//add error/show errors
 	};
 
 	render() {

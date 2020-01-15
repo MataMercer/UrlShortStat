@@ -24,7 +24,7 @@ import { User } from '../types/User';
 type LoginState = {
 	email: string;
 	password: string;
-	formErrorMessages: string[];
+	errors: string[];
 };
 
 type Props = LinkDispatchProps &
@@ -36,7 +36,7 @@ class Login extends React.Component<Props, LoginState> {
 	state: LoginState = {
 		email: '',
 		password: '',
-		formErrorMessages: [],
+		errors: [],
 	};
 
 	onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -59,12 +59,12 @@ class Login extends React.Component<Props, LoginState> {
 			errors.push('Please enter a valid email.');
 		}
 
-		if (this.state.password.length < 6) {
-			errors.push('A password must be at least 6 characters.');
+		if (this.state.password.length === 0) {
+			errors.push('Please enter a password.');
 		}
 
 		if (errors.length > 0) {
-			this.setState({ formErrorMessages: errors });
+			this.setState({ errors });
 			return;
 		}
 
@@ -73,8 +73,11 @@ class Login extends React.Component<Props, LoginState> {
 			password: this.state.password,
 		};
 
-		this.props.startLoginUser(user);
+		await this.props.startLoginUser(user);
 
+		if(this.props.errors.length>0){
+			this.setState({errors: this.props.errors})
+		}
 		// if (error) {
 		// 	try {
 		// 		this.setState({ formErrorMessages: [error.response.data] });
@@ -84,6 +87,7 @@ class Login extends React.Component<Props, LoginState> {
 		// 		});
 		// 	}
 		// }
+
 	};
 	render() {
 		const { from } = this.props.location.state || { from: { pathname: '/' } };
@@ -101,18 +105,18 @@ class Login extends React.Component<Props, LoginState> {
 				) : (
 					''
 				)}
-				{this.state.formErrorMessages.length > 0 ? (
-					<Alert color="danger">
-						{this.state.formErrorMessages.map(message => (
-							<div>
-								{message}
-								<hr />
-							</div>
-						))}
-					</Alert>
-				) : (
-					''
-				)}
+				{this.state.errors.length > 0 ? (
+						<Alert color="danger">
+							{this.state.errors.map((message, index) => (
+								<div>
+									{message}
+									{index !== this.state.errors.length -1 ? <hr />: null}
+								</div>
+							))}
+						</Alert>
+					) : (
+						''
+					)}
 				<Form onSubmit={this.onSubmit}>
 					<FormGroup>
 						<Label for="email">Email Address</Label>
@@ -150,6 +154,7 @@ class Login extends React.Component<Props, LoginState> {
 interface LinkStateProp {
 	loading: boolean;
 	name?: string;
+	errors: string[];
 }
 
 interface LinkDispatchProps {
@@ -159,6 +164,7 @@ interface LinkDispatchProps {
 const mapStateToProps = (state: AppState): LinkStateProp => ({
 	loading: state.user.loading,
 	name: state.user.name,
+	errors: state.user.errors
 });
 
 const mapDispatchToProps = (
