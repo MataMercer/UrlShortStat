@@ -1,11 +1,12 @@
+import app from '../../src/app'
 
 describe('Edit route', () =>{
     const chai = require('chai');
     const expect = chai.expect;
     const chaiHttp = require('chai-http');
     chai.use(chaiHttp);
-    const app = require('../../app');
-    const models = require('../../models');
+    
+    const models = require('../../src/models');
 
     const validUser = {
         'name': 'validname',
@@ -48,7 +49,7 @@ describe('Edit route', () =>{
 
     const createUrl = (code, originalUrl) => {
 
-        validUrl = {
+        const validUrl = {
             customUrl: code,
             originalUrl: originalUrl  
         }
@@ -61,7 +62,7 @@ describe('Edit route', () =>{
     }
 
     before(async function() {
-        await require('../../models').sequelize.sync({force: true});
+        await require('../../src/models').sequelize.sync({force: true});
         await registerUser(validUser);
         await logoutUser();
         await registerUser(validUser2);
@@ -166,8 +167,7 @@ describe('Delete route', () =>{
     const expect = chai.expect;
     const chaiHttp = require('chai-http');
     chai.use(chaiHttp);
-    const app = require('../../app');
-    const models = require('../../models');
+    const models = require('../../src/models');
 
     const validUser = {
         'name': 'validname',
@@ -210,7 +210,7 @@ describe('Delete route', () =>{
 
     const createUrl = (urlCode) => {
 
-        validUrl = {
+        const validUrl = {
             customUrl: urlCode,
             originalUrl: 'https://www.google.com/'  
         }
@@ -223,7 +223,7 @@ describe('Delete route', () =>{
     }
 
     before(async function() {
-        await require('../../models').sequelize.sync({force: true});
+        await require('../../src/models').sequelize.sync({force: true});
         await registerUser(validUser);
         await logoutUser();
         await registerUser(validUser2);
@@ -279,9 +279,7 @@ describe('Analytics route', () => {
     const expect = chai.expect;
     const chaiHttp = require('chai-http');
     chai.use(chaiHttp);
-
-    const app = require('../../app');
-    const models = require('../../models');
+    const models = require('../../src/models');
 
     const validUser = {
         'name': 'valid3name',
@@ -309,7 +307,7 @@ describe('Analytics route', () => {
     const createUrl = () => {
      
         const visitUrlCode = 1;
-        validUrl = {
+        const validUrl = {
             customUrl: visitUrlCode,
             originalUrl: 'https://www.google.com/'  
         }
@@ -322,7 +320,7 @@ describe('Analytics route', () => {
     }
     const createDates = () => {   
         //add visits varying each in year, month
-        testVisits =[];
+        let testVisits =[];
         
         for(let i = 0; i < 12; i++){
             testVisits.push(
@@ -362,7 +360,7 @@ describe('Analytics route', () => {
 
 
     before(async function() {
-        await require('../../models').sequelize.sync({force: true});
+        await require('../../src/models').sequelize.sync({force: true});
 
         await registerUser();
         await createUrl();

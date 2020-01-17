@@ -1,11 +1,11 @@
+import app from '../../src/app'
 const chai = require('chai');
 const expect = chai.expect;
 const chaiHttp = require('chai-http');
-const Bluebird = require('bluebird');
 chai.use(chaiHttp);
 
-const app = require('../../app');
-const models = require('../../models');
+
+const models = require('../../src/models');
 describe('Register route', () => {
     const validUser = {
         'name': 'validname',
@@ -15,7 +15,7 @@ describe('Register route', () => {
     }
 
     before(function () {
-        return require('../../models').sequelize.sync({force: true});
+        return require('../../src/models').sequelize.sync({force: true});
     });
     
     beforeEach(async function () {
@@ -89,7 +89,7 @@ describe('login route', () => {
 
     
     before(function () {
-        return require('../../models').sequelize.sync();
+        return require('../../src/models').sequelize.sync();
     });
     
     beforeEach(function () {
@@ -176,7 +176,7 @@ describe('logout route', () => {
 
     
     before(function () {
-        return require('../../models').sequelize.sync({force:true});
+        return require('../../src/models').sequelize.sync({force:true});
     });
     
     beforeEach(function () {
@@ -245,7 +245,7 @@ describe('Edit route', () => {
     }
 
     before(function () {
-        return require('../../models').sequelize.sync({force: true});
+        return require('../../src/models').sequelize.sync({force: true});
     });
     
     beforeEach(async function () {

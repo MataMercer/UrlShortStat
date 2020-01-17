@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import {
-	Button,
 	Collapse,
 	Nav,
 	Navbar,

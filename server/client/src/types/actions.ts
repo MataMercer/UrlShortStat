@@ -93,7 +93,7 @@ export interface UrlLoadingAction {
 
 export interface UrlErrorAction {
 	type: typeof URL_ERROR;
-	error: [];
+	error: string[];
 }
 
 export type UrlActionTypes =

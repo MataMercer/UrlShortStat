@@ -13,29 +13,32 @@ import {
 	Modal,
 	ModalHeader,
 	ModalBody,
+	Row,
+	Label,
 } from 'reactstrap';
 import { startEditUrl } from '../actions/urlActions';
 import { AppState } from '../store';
 import { Url } from '../types/Url';
 import { ThunkDispatch } from 'redux-thunk';
 import { AppActions } from '../types/actions';
+import config from '../config/config';
 
 type EditUrlFormProps = {
 	showEditUrlForm: boolean;
 	onToggleEditUrlForm: () => void;
-	code: string;
+	url: Url | null;
 };
 
 type EditUrlFormState = {
 	originalUrl: string;
-	formErrorMessages: string[];
+	errors: string[];
 };
 
 type Props = EditUrlFormProps & LinkDispatchProps & LinkStateProp;
 class EditUrlForm extends Component<Props, EditUrlFormState> {
 	state: EditUrlFormState = {
 		originalUrl: '',
-		formErrorMessages: [],
+		errors: [],
 	};
 
 	onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,13 +54,15 @@ class EditUrlForm extends Component<Props, EditUrlFormState> {
 		}
 
 		if (errors.length > 0) {
-			this.setState({ formErrorMessages: errors });
+			this.setState({ errors });
 			return;
 		}
-
+		if(this.props.url === null){
+			return;
+		}
 		const newUrl = {
 			originalUrl: this.state.originalUrl,
-			code: this.props.code,
+			code: this.props.url.code,
 		};
 
 		this.props.startEditUrl(newUrl).then(() => {
@@ -68,8 +73,13 @@ class EditUrlForm extends Component<Props, EditUrlFormState> {
 			//assign errors
 		});
 
-		//redir
-		// this.props.history.push('/dashboard');
+		if(this.props.errors.length > 0){
+			this.setState({errors: this.props.errors})
+		}else{
+			this.props.onToggleEditUrlForm();
+		}
+
+
 	};
 
 	render() {
@@ -81,15 +91,16 @@ class EditUrlForm extends Component<Props, EditUrlFormState> {
 				>
 					<ModalBody>
 						<ModalHeader toggle={this.props.onToggleEditUrlForm}>
-							Edit URL
+							<Row>Editing URL</Row>
+							<Row>{this.props.url ? config.serverUrl + '/u/' + this.props.url.code : null}</Row>
+							
 						</ModalHeader>
-						<h4>{this.props.code}</h4>
-						{this.state.formErrorMessages.length > 0 ? (
+						{this.state.errors.length > 0 ? (
 							<Alert color="danger">
-								{this.state.formErrorMessages.map(message => (
+								{this.state.errors.map((message, index) => (
 									<div>
 										{message}
-										<hr />
+										{index !== this.state.errors.length - 1 ? <hr /> : null}
 									</div>
 								))}
 							</Alert>
@@ -98,20 +109,17 @@ class EditUrlForm extends Component<Props, EditUrlFormState> {
 						)}
 						<Form onSubmit={this.onSubmit}>
 							<FormGroup>
-								<InputGroup>
-									<InputGroupAddon addonType="prepend">
-										<InputGroupText>N</InputGroupText>
-									</InputGroupAddon>
+							
+									<Label for="originalUrl">Original Url</Label>
 									<Input
 										name="originalUrl"
-										placeholder="URL to shorten"
+										id="originalUrl"
 										type="text"
+										placeholder={this.props.url ? this.props.url.originalUrl : ''}
 										onChange={this.onChange}
 									/>
-								</InputGroup>
-
-								<Button>Save changes</Button>
 							</FormGroup>
+							<Button>Save</Button>
 						</Form>
 					</ModalBody>
 				</Modal>
@@ -122,6 +130,7 @@ class EditUrlForm extends Component<Props, EditUrlFormState> {
 
 interface LinkStateProp {
 	loading: boolean;
+	errors: string[];
 }
 
 interface LinkDispatchProps {
@@ -130,6 +139,7 @@ interface LinkDispatchProps {
 
 const mapStateToProps = (state: AppState, ownProps: EditUrlFormProps) => ({
 	loading: state.url.loading,
+	errors: state.url.errors
 });
 
 const mapDispatchToProps = (

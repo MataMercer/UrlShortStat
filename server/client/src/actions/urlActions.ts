@@ -34,8 +34,8 @@ export const setUrlLoading = (): AppActions => ({
 });
 
 export const setUrlError = (errors: string[]|string): AppActions => ({
-	type: 'USER_ERROR',
-	payload: (errors instanceof Array ? errors as string[] : [errors as string]),
+	type: 'URL_ERROR',
+	error: (errors instanceof Array ? errors as string[] : [errors as string]),
 });
 
 export const startGetUrls = (): ThunkAction<
@@ -51,8 +51,18 @@ export const startGetUrls = (): ThunkAction<
 			dispatch(getUrls(res.data.urls, res.data.count));
 		})
 		.catch(error => {
-			console.log(error);
-			dispatch(setUrlError(error.response.data.message));
+			console.log(
+				error.response?.data?.message
+					? error.response?.data?.message
+					: error.toString()
+			);
+			dispatch(
+				setUrlError(
+					error.response?.data?.message
+						? error.response?.data?.message
+						: error.toString()
+				)
+			);
 		});
 };
 
@@ -69,8 +79,18 @@ export const startCreateUrl = (
 			dispatch(createUrl(res.data));
 		})
 		.catch(error => {
-			console.log(error.response);
-			dispatch(setUrlError(error.response.data.message));
+			console.log(
+				error.response?.data?.message
+					? error.response?.data?.message
+					: error.toString()
+			);
+			dispatch(
+				setUrlError(
+					error.response?.data?.message
+						? error.response?.data?.message
+						: error.toString()
+				)
+			);
 		});
 };
 
@@ -87,8 +107,18 @@ export const startEditUrl = (
 			dispatch(editUrl(res.data));
 		})
 		.catch(error => {
-			console.log(error.response);
-			dispatch(setUrlError(error.response.data.message));
+			console.log(
+				error.response?.data?.message
+					? error.response?.data?.message
+					: error.toString()
+			);
+			dispatch(
+				setUrlError(
+					error.response?.data?.message
+						? error.response?.data?.message
+						: error.toString()
+				)
+			);
 		});
 };
 
@@ -104,7 +134,17 @@ export const startDeleteUrl = (
 			dispatch(deleteUrl(res.data));
 		})
 		.catch(error => {
-			console.log(error.response);
-			dispatch(setUrlError(error.response.data.message));
+			console.log(
+				error.response?.data?.message
+					? error.response?.data?.message
+					: error.toString()
+			);
+			dispatch(
+				setUrlError(
+					error.response?.data?.message
+						? error.response?.data?.message
+						: error.toString()
+				)
+			);
 		});
 };

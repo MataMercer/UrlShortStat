@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Col, Container, ListGroup, Button, Row, Spinner } from 'reactstrap';
+import { ListGroup, Button, Row, Spinner, Alert } from 'reactstrap';
 import { connect } from 'react-redux';
 import { startGetUrls } from '../actions/urlActions';
 import CreateUrlForm from './CreateUrlForm';
@@ -15,20 +15,27 @@ import { AppActions } from '../types/actions';
 type UrlListState = {
     showCreateUrlForm: boolean;
     showEditUrlForm: boolean;
-    editingUrlCode: string;
+	editingUrl: Url | null;
+	errors: string[]
 }
 
 type Props =  LinkDispatchProps & LinkStateProp;
 
 class UrlList extends Component<Props, UrlListState> {
-	state = {
+	state:UrlListState = {
 		showCreateUrlForm: false,
 		showEditUrlForm: false,
-		editingUrlCode: "",
+		editingUrl: null,
+		errors: []
 	};
 
-	componentDidMount() {
-		this.props.startGetUrls();
+	componentDidMount = async () => {
+		await this.props.startGetUrls();
+		if(this.props.errors.length > 0){
+			
+			this.setState({errors: this.props.errors})
+		}
+		
 	}
 
 	onToggleCreateUrlForm = () => {
@@ -39,8 +46,8 @@ class UrlList extends Component<Props, UrlListState> {
 		this.setState({ showEditUrlForm: !this.state.showEditUrlForm });
 	};
 
-	setEditingUrlCode(code: string) {
-		this.setState({ editingUrlCode: code });
+	setEditingUrl(url:Url) {
+		this.setState({editingUrl: url });
 	}
 
 	render() {
@@ -49,10 +56,26 @@ class UrlList extends Component<Props, UrlListState> {
 		return (
 			<div>
 					<h1>Your URLs</h1>
+
+					{this.state.errors.length > 0 ? (
+						<Alert color="danger">
+							{this.state.errors.map((message, index) => (
+								<div>
+									{message}
+									{index !== this.state.errors.length -1 ? <hr />: null}
+								</div>
+							))}
+						</Alert>
+					) : (
+						''
+					)}
+
 					<hr />
 					<h4>
 						{this.props.urlCount} URL{this.props.urlCount === 1 ? '' : 's'}
 					</h4>
+
+					
 
 					<Button
 						onClick={this.onToggleCreateUrlForm.bind(this)}
@@ -75,7 +98,7 @@ class UrlList extends Component<Props, UrlListState> {
 						<EditUrlForm
 							showEditUrlForm={this.state.showEditUrlForm}
 							onToggleEditUrlForm={this.onToggleEditUrlForm.bind(this)}
-							code={this.state.editingUrlCode}
+							url={this.state.editingUrl}
 						/>
 					) : (
 						''
@@ -90,7 +113,7 @@ class UrlList extends Component<Props, UrlListState> {
 									<UrlListItem
 										url={url}
 										onToggleEditUrlForm={this.onToggleEditUrlForm.bind(this)}
-										setEditingUrlCode={this.setEditingUrlCode.bind(this)}
+										setEditingUrl={this.setEditingUrl.bind(this)}
 									/>
 								</Row>
 							))}
@@ -104,7 +127,8 @@ class UrlList extends Component<Props, UrlListState> {
 interface LinkStateProp {
     loading: boolean;
     urls: Url[];
-    urlCount: number;
+	urlCount: number;
+	errors: string[];
 }
 
 interface LinkDispatchProps {
@@ -116,7 +140,8 @@ const mapStateToProps = (
 ): LinkStateProp => ({
     loading: state.url.loading,
     urls: state.url.urls,
-    urlCount: state.url.urlCount
+	urlCount: state.url.urlCount,
+	errors: state.url.errors
 });
 
 const mapDispatchToProps = (

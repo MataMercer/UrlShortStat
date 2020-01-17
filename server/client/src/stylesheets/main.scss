@@ -69,13 +69,13 @@ $loading-bar-z-index: 1031;
 .url-list-item-header-opened:hover {
 	padding-top: 1rem;
 	padding-bottom: 1rem;
-	background-color: darken($url-list-item-color, 3%);
+	background-color: darken($url-list-item-color, 6%);
 	border-bottom-left-radius: 0%;
 	border-bottom-right-radius: 0%;
 }
 
 .url-list-item-header:hover {
-	background-color: darken($url-list-item-color, 3%);
+	background-color: darken($url-list-item-color, 6%);
 	border-bottom-left-radius: $custom-border-radius;
 	border-bottom-right-radius: $custom-border-radius;
 }

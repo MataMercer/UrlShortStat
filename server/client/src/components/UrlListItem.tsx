@@ -1,20 +1,18 @@
 import React, { Component } from 'react';
 import {
 	Col,
-	Card,
 	Collapse,
 	Container,
 	FormGroup,
 	Label,
 	Input,
-	ListGroup,
 	Button,
 	Row,
 	Spinner,
 } from 'reactstrap';
 
 import { connect } from 'react-redux';
-import { deleteUrl, startDeleteUrl } from '../actions/urlActions';
+import { startDeleteUrl } from '../actions/urlActions';
 
 import axios from 'axios';
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -29,7 +27,7 @@ var moment = require('moment');
 
 type UrlListItemProps = {
 	url: Url;
-	setEditingUrlCode: (code: string) => void;
+	setEditingUrl: (url: Url) => void;
 	onToggleEditUrlForm: () => void;
 };
 
@@ -77,7 +75,7 @@ class UrlListItem extends Component<Props, UrlListItemState> {
 
 	onEditClick = (e: React.MouseEvent<any, MouseEvent>) => {
 		e.stopPropagation();
-		this.props.setEditingUrlCode(this.props.url.code);
+		this.props.setEditingUrl(this.props.url);
 		this.props.onToggleEditUrlForm();
 	};
 

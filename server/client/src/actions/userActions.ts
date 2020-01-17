@@ -28,7 +28,7 @@ export const editUser = (user: User): AppActions => ({
 });
 
 export const deleteUser = (): AppActions => ({
-	type: 'USER_DELETE'
+	type: 'USER_DELETE',
 });
 
 export const checkUserSession = (user: User): AppActions => ({
@@ -36,9 +36,9 @@ export const checkUserSession = (user: User): AppActions => ({
 	payload: user,
 });
 
-export const setUserError = (errors: string[]|string): AppActions => ({
+export const setUserError = (errors: string[] | string): AppActions => ({
 	type: 'USER_ERROR',
-	payload: (errors instanceof Array ? errors as string[] : [errors as string]),
+	payload: errors instanceof Array ? (errors as string[]) : [errors as string],
 });
 
 export const setUserLoading = (error: string): AppActions => ({
@@ -57,8 +57,18 @@ export const startRegisterUser = (
 			dispatch(registerUser(res.data));
 		})
 		.catch(error => {
-			console.log(error.response);
-			dispatch(setUserError(error.response.data.message));
+			console.log(
+				error.response?.data?.message
+					? error.response?.data?.message
+					: error.toString()
+			);
+			dispatch(
+				setUserError(
+					error.response?.data?.message
+						? error.response?.data?.message
+						: error.toString()
+				)
+			);
 		});
 };
 
@@ -75,8 +85,18 @@ export const startLoginUser = (
 			dispatch(loginUser(res.data));
 		})
 		.catch(error => {
-			console.log(error.response);
-			dispatch(setUserError(error.response.data.message));
+			console.log(
+				error.response?.data?.message
+					? error.response?.data?.message
+					: error.toString()
+			);
+			dispatch(
+				setUserError(
+					error.response?.data?.message
+						? error.response?.data?.message
+						: error.toString()
+				)
+			);
 		});
 };
 
@@ -94,8 +114,18 @@ export const startLogoutUser = (): ThunkAction<
 			dispatch(logoutUser(res.data));
 		})
 		.catch(error => {
-			console.log(error.response);
-			dispatch(setUserError(error.response.data.message));
+			console.log(
+				error.response?.data?.message
+					? error.response?.data?.message
+					: error.toString()
+			);
+			dispatch(
+				setUserError(
+					error.response?.data?.message
+						? error.response?.data?.message
+						: error.toString()
+				)
+			);
 		});
 };
 
@@ -112,15 +142,27 @@ export const startEditUser = (
 			dispatch(editUser(res.data));
 		})
 		.catch(error => {
-			console.log(error.response);
-			dispatch(setUserError(error.response.data.message));
+			console.log(
+				error.response?.data?.message
+					? error.response?.data?.message
+					: error.toString()
+			);
+			dispatch(
+				setUserError(
+					error.response?.data?.message
+						? error.response?.data?.message
+						: error.toString()
+				)
+			);
 		});
 };
 
-export const startDeleteUser = (
-): ThunkAction<Promise<void>, void, void, AppActions> => (
-	dispatch: Dispatch<AppActions>
-): Promise<void> => {
+export const startDeleteUser = (): ThunkAction<
+	Promise<void>,
+	void,
+	void,
+	AppActions
+> => (dispatch: Dispatch<AppActions>): Promise<void> => {
 	// dispatch(setUserLoading());
 
 	return axios
@@ -129,8 +171,18 @@ export const startDeleteUser = (
 			dispatch(deleteUser());
 		})
 		.catch(error => {
-			console.log(error.response);
-			dispatch(setUserError(error.response.data.message));
+			console.log(
+				error.response?.data?.message
+					? error.response?.data?.message
+					: error.toString()
+			);
+			dispatch(
+				setUserError(
+					error.response?.data?.message
+						? error.response?.data?.message
+						: error.toString()
+				)
+			);
 		});
 };
 
@@ -149,7 +201,17 @@ export const startCheckUserSession = (): ThunkAction<
 			dispatch(checkUserSession(res.data));
 		})
 		.catch(error => {
-			console.log(error.response);
-			dispatch(setUserError(error.response.data.message));
+			console.log(
+				error.response?.data?.message
+					? error.response?.data?.message
+					: error.toString()
+			);
+			dispatch(
+				setUserError(
+					error.response?.data?.message
+						? error.response?.data?.message
+						: error.toString()
+				)
+			);
 		});
 };

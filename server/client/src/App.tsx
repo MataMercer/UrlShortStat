@@ -45,11 +45,6 @@ class App extends Component<Props, AppCompState> {
 	}
 }
 
-// const mapStateToProps = (state) => ({
-//   loading: state.user.loading
-// });
-
-// export default connect(mapStateToProps, {checkUserSession})(App);
 interface LinkStateProp {
 	name?: string;
 	loading: boolean;

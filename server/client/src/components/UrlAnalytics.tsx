@@ -1,14 +1,7 @@
 import React from 'react';
 import {
 	Col,
-	Container,
-	FormGroup,
-	Label,
-	Input,
-	ListGroup,
-	Button,
-	Row,
-	Spinner,
+	Row
 } from 'reactstrap';
 import { connect } from 'react-redux';
 import Chart from 'chart.js';
@@ -261,7 +254,7 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 				},
 			},
 		};
-		this.state.chart = new Chart(myChartRef, config);
+		this.setState({chart: new Chart(myChartRef, config)})
 	}
 
 	async updateData(): Promise<void> {

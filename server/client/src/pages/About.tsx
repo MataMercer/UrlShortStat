@@ -18,7 +18,7 @@ class About extends React.Component{
             </p>
 
             <h2>Contact Creator</h2>
-            <p>UrlShortStat was created as a personal project by MataMercer (Mercer Denholm). If you have any questions, feel free to contact him through email or his Github.</p>
+            <p>UrlShortStat was created as a personal project by <a href="https://github.com/MataMercer"> MataMercer</a>. If you have any questions, feel free to contact him through email or his Github.</p>
             </Container>
         );
     }
