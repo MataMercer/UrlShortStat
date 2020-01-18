@@ -35,8 +35,8 @@ var mySessionStore = new SequelizeSessionStore({
   db: models.sequelize
 }); // create the server
 
-var app = (0, _express["default"])();
-app.use((0, _helmet["default"])());
+var app = (0, _express["default"])(); // app.use(helmet());
+
 app.use((0, _cors["default"])({
   credentials: true,
   origin: 'http://localhost:3000'
