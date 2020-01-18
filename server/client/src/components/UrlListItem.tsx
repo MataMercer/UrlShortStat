@@ -173,7 +173,7 @@ class UrlListItem extends Component<Props, UrlListItemState> {
 					<FormGroup>
 						<Label for="timeSpan">Time Period</Label>
 						<Input type="select" name="timeSpan" onChange={this.onChange}>
-							<option value="last30days">Last 30 days</option>
+							<option value="last30days">30 Day Period</option>
 							<option value="month">Month</option>
 							<option value="year">Year</option>
 						</Input>
@@ -182,7 +182,7 @@ class UrlListItem extends Component<Props, UrlListItemState> {
 						<Input
 							name="unitsBackInTime"
 							value={this.state.unitsBackInTime}
-							disabled={this.state.timeSpan === 'last30days'}
+							disabled={this.state.unitsBackInTime > 100}
 							onChange={this.onChange}
 							type="number"
 							min="0"
@@ -192,6 +192,7 @@ class UrlListItem extends Component<Props, UrlListItemState> {
 					
 					{!this.props.loading ? 
 					(<UrlAnalytics
+					isOpen={this.state.isOpen}
 					timeSpan={this.state.timeSpan}
 					code={code}
 					unitsBackInTime={this.state.unitsBackInTime}

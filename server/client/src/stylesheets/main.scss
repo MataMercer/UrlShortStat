@@ -121,9 +121,22 @@ $loading-bar-z-index: 1031;
 	border-radius: $custom-border-radius;
 }
 
+#myChart{
+	min-height: 350px;
+	min-width: 250px;
+}
+
 // loading bar
 #nprogress .bar {
 	background: $primary;
+}
+
+.arrow-red{
+	color:red;
+}
+
+.arrow-green{
+	color:green;
 }
 
 .fade-enter {

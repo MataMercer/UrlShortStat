@@ -49,6 +49,8 @@ export default function(
 			};
 
 		case 'URL_DELETE':
+			console.log(state.urls)
+			console.log(action.url.code);
 			return {
 				...state,
 				loading: false,
@@ -65,7 +67,6 @@ export default function(
 			return {
 				...state,
 				loading: false,
-				urls: [],
 				urlCount: 0,
 				errors: action.error,
 				

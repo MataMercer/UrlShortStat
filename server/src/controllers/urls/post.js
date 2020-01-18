@@ -6,8 +6,10 @@ import moment from 'moment';
 
 const UrlsPosts = {
     createUrl(req, res){
-        const { originalUrl, customUrl } = req.body;
-    
+        const { originalUrl, code } = req.body;
+        const customUrl = code;
+        console.log(customUrl);
+        console.log(originalUrl);
         if (validUrl.isUri(originalUrl)) {
             try {
                 if (customUrl) {
@@ -109,16 +111,16 @@ const UrlsPosts = {
                     upperBoundDate = new Date(
                         currentDate.getFullYear(),
                         currentDate.getMonth(),
-                        currentDate.getDate() + 1
+                        currentDate.getDate() + 1 - 30 * unitsBackInTime
                     );
                     lowerBoundDate = new Date(
-                        upperBoundDate.getFullYear(),
-                        upperBoundDate.getMonth(),
-                        upperBoundDate.getDate() - 30
+                        currentDate.getFullYear(),
+                        currentDate.getMonth(),
+                        currentDate.getDate() - 30 * (unitsBackInTime + 1) 
                     );
                     format = 'MM/DD/YYYY';
             }
-    
+ 
             models.Visit.findAndCountAll({
                 where: {
                     UrlCode: code,

@@ -140,6 +140,7 @@ class CreateUrlForm extends Component<Props, CreateUrlFormState> {
 											name="customUrl"
 											placeholder=""
 											type="text"
+											value={this.state.customUrl}
 											id="customUrl"
 											onChange={this.onChange}
 										/>

@@ -7,7 +7,10 @@ const UrlsDeletions = {
                 if (url) {
                     if (url.get('UserId') === req.user.dataValues.id) {
                         url.destroy();
-                        return res.json('url deleted');
+                        return res.send({
+                            message: 'you have successfully deleted the url.',
+                            code: req.params.code
+                        });
                     } else {
                         return res.status(403).json('Forbidden access');
                     }

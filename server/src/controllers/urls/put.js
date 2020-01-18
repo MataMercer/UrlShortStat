@@ -15,7 +15,7 @@ const UrlsPuts = {
                                     { where: { code } }
                                 ).then(function() {
                                     return res.send({
-                                        message: 'you have successfully registered a new url.',
+                                        message: 'you have successfully edited the url.',
                                         code,
                                         originalUrl,
                                     });

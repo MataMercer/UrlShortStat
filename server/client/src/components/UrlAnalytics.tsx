@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-	Col,
-	Row
-} from 'reactstrap';
+import { Col, Row, Button, Container } from 'reactstrap';
 import { connect } from 'react-redux';
 import Chart from 'chart.js';
 import axios from 'axios';
@@ -18,11 +15,15 @@ type UrlAnalyticsProps = {
 	code: string;
 	timeSpan: string;
 	unitsBackInTime: number;
+	isOpen: boolean;
 };
 
 type UrlAnalyticsState = {
 	loading: boolean;
 	chart?: Chart;
+	totalVisitCount: number;
+	timeSpanVisitCount: number;
+	visitGrowth: number;
 };
 
 type Props = UrlAnalyticsProps & LinkDispatchProps & LinkStateProp;
@@ -32,19 +33,23 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 	state: UrlAnalyticsState = {
 		loading: false,
 		chart: undefined,
+		timeSpanVisitCount: 0,
+		totalVisitCount: 0,
+		visitGrowth: 0,
 	};
 
-	getAnalytics(): Promise<Analytics | null> {
+	getAnalytics(unitsBackInTime: number): Promise<Analytics | null> {
 		const body = {
 			code: this.props.code,
 			timeSpan: this.props.timeSpan,
-			unitsBackInTime: this.props.unitsBackInTime,
+			unitsBackInTime: unitsBackInTime,
 			timeSpanVisitCount: 0,
 			totalVisitCount: 0,
 		};
 		return axios
 			.post(config.serverUrl + '/api/url/analytics/', body)
 			.then(res => {
+				console.log(res.data);
 				// this.setState({loading: false});
 
 				//change the format of the response to match the format for plotting on chartjs
@@ -61,12 +66,12 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 					case 'month':
 						lowerBoundDate = new Date(
 							currentDate.getFullYear(),
-							currentDate.getMonth() - this.props.unitsBackInTime,
+							currentDate.getMonth() - unitsBackInTime,
 							1
 						); // first dday of month
 						upperBoundDate = new Date(
 							currentDate.getFullYear(),
-							currentDate.getMonth() - this.props.unitsBackInTime + 1,
+							currentDate.getMonth() - unitsBackInTime + 1,
 							0
 						); //first of next month
 						format = 'MM/DD/YYYY';
@@ -95,12 +100,12 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 						break;
 					case 'year':
 						lowerBoundDate = new Date(
-							currentDate.getFullYear() - this.props.unitsBackInTime,
+							currentDate.getFullYear() - unitsBackInTime,
 							0,
 							1
 						);
 						upperBoundDate = new Date(
-							currentDate.getFullYear() + 1 - this.props.unitsBackInTime,
+							currentDate.getFullYear() + 1 - unitsBackInTime,
 							0,
 							0
 						);
@@ -132,11 +137,15 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 						break;
 					default:
 						//last 30 days
-						upperBoundDate = currentDate;
+						upperBoundDate = new Date(
+							currentDate.getFullYear(),
+							currentDate.getMonth(),
+							currentDate.getDate() - 30 * unitsBackInTime
+						);
 						lowerBoundDate = new Date(
-							upperBoundDate.getFullYear(),
-							upperBoundDate.getMonth(),
-							upperBoundDate.getDate() - 30
+							currentDate.getFullYear(),
+							currentDate.getMonth(),
+							currentDate.getDate() - 30 * (unitsBackInTime + 1)
 						);
 						format = 'MM/DD/YYYY';
 
@@ -158,6 +167,7 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 						}
 				}
 
+				//tightly couple the dates with number of visits so order will be preserved.
 				let data = [];
 				for (let key in dataPoints) {
 					data.push({
@@ -165,6 +175,11 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 						y: dataPoints[key],
 					});
 				}
+
+				//javascript doesn't guarantee ordered elements for all browsers in objects. We need to make sure its in order bc we derived this data from an object.
+				data = data.sort((a, b) => {
+					return new Date(a.x) > new Date(b.x) ? 1 : -1;
+				});
 
 				const analyticsResult: Analytics = {
 					data,
@@ -223,20 +238,13 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 				],
 			},
 			options: {
+				maintainAspectRatio: false,
 				scales: {
 					xAxes: [
 						{
 							scaleLabel: {
 								display: true,
 								labelString: this.getXAxisLabel(),
-							},
-							type: 'time',
-							time: {
-								unit: 'day',
-								unitStepSize: 1,
-								displayFormats: {
-									day: 'MMM DD YY',
-								},
 							},
 						},
 					],
@@ -254,7 +262,32 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 				},
 			},
 		};
-		this.setState({chart: new Chart(myChartRef, config)})
+		this.setState({ chart: new Chart(myChartRef, config) });
+	}
+
+	getLabels(analytics: Analytics, analyticsPrev: Analytics): string[] {
+		let labelList: string[] = [];
+		for (
+			let i = 0;
+			i < analytics.data.length || i < analyticsPrev.data.length;
+			i++
+		) {
+			labelList.push(
+				`${i < analytics.data.length ? analytics.data[i].x : ''};${
+					i < analyticsPrev.data.length ? analyticsPrev.data[i].x : ''
+				}`
+			);
+		}
+
+		return labelList;
+	}
+
+	getYData(analytics: Analytics): number[] {
+		let yList: number[] = [];
+		for (let i = 0; i < analytics.data.length; i++) {
+			yList.push(analytics.data[i].y);
+		}
+		return yList;
 	}
 
 	async updateData(): Promise<void> {
@@ -262,26 +295,59 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 			return;
 		}
 
+		const analytics = await this.getAnalytics(this.props.unitsBackInTime);
+		if (!analytics) {
+			return;
+		}
+
+		const analyticsPrev = await this.getAnalytics(
+			this.props.unitsBackInTime + 1
+		);
+		if (!analyticsPrev) {
+			return;
+		}
+
+		// console.log(analytics);
+		// this.state.chart.data.datasets.forEach((dataset:Chart.ChartDataSets) => {
+		//     dataset.data.pop();
+		//     dataset.data = analytics.data;
+		// });
+
+		this.state.chart.data.labels = this.getLabels(analytics, analyticsPrev);
+		const dateFormat =
+			this.props.timeSpan === 'year' ? 'MMM YYYY' : 'MMM DD, YYYY';
 		this.state.chart.options.scales = {
 			xAxes: [
 				{
+					id: 'x-axis-1',
+					position: 'bottom',
 					scaleLabel: {
 						display: true,
 						labelString: this.getXAxisLabel(),
 					},
-					type: 'time',
-					time: {
-						unit: this.getUnits(),
-						unitStepSize: 1,
-						displayFormats: {
-							day: 'MMM DD, YYYY',
-							month: 'MMM YYYY',
+					ticks: {
+						callback: function(label) {
+							return moment(new Date(label.split(';')[0])).format(dateFormat);
+						},
+					},
+				},
+				{
+					id: 'x-axis-2',
+					position: 'top',
+					scaleLabel: {
+						display: true,
+						labelString: this.getXAxisLabel(),
+					},
+					ticks: {
+						callback: function(label) {
+							return moment(new Date(label.split(';')[1])).format(dateFormat);
 						},
 					},
 				},
 			],
 			yAxes: [
 				{
+					id: 'y-axis-1',
 					scaleLabel: {
 						display: true,
 						labelString: 'Number of Visits',
@@ -293,51 +359,123 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 			],
 		};
 
-		const analytics = await this.getAnalytics();
-		if (!analytics) {
-			return;
-		}
-		// this.state.chart.data.datasets.forEach((dataset:Chart.ChartDataSets) => {
-		//     dataset.data.pop();
-		//     dataset.data = analytics.data;
-		// });
-		const lineColor = '#69cfff';
+		const lineColorCurrent = '#69cfff';
+		const lineColorPrev = '#f54242';
 		this.state.chart.data.datasets = [
 			{
-				label: 'Visits',
-				backgroundColor: lineColor,
-				borderColor: lineColor,
+				xAxisID: 'x-axis-1',
+				yAxisID: 'y-axis-1',
+				label: 'This Time Period',
+				backgroundColor: lineColorCurrent,
+				borderColor: lineColorCurrent,
 				fill: false,
-				data: analytics.data,
+				data: this.getYData(analytics),
+			},
+			{
+				xAxisID: 'x-axis-2',
+				yAxisID: 'y-axis-1',
+				label: 'Last Time Period',
+				backgroundColor: lineColorPrev,
+				borderColor: lineColorPrev,
+				fill: false,
+				data: this.getYData(analyticsPrev),
 			},
 		];
 
+		const growthPercent =
+			((analytics.timeSpanVisitCount - analyticsPrev.timeSpanVisitCount) /
+				((analytics.timeSpanVisitCount + analyticsPrev.timeSpanVisitCount) /
+					2)) *
+			100;
+
 		this.state.chart.update();
-		// this.setState({timeSpanVisitCount:analytics.timeSpanVisitCount, totalVisitCount: analytics.totalVisitCount})
+		this.setState({
+			timeSpanVisitCount: analytics.timeSpanVisitCount,
+			totalVisitCount: analytics.totalVisitCount,
+			visitGrowth: Number.isNaN(growthPercent) ? 0 : growthPercent,
+		});
 	}
 
 	componentDidMount() {
 		this.initChart();
-		this.updateData();
 	}
 
-	async componentDidUpdate() {
+	async componentDidUpdate(
+		prevProps: UrlAnalyticsProps,
+		prevState: UrlAnalyticsState
+	) {
+		if (
+			(this.props.isOpen !== prevProps.isOpen && this.props.isOpen === true) ||
+			this.props.timeSpan !== prevProps.timeSpan ||
+			this.props.unitsBackInTime !== prevProps.unitsBackInTime
+		) {
+			this.updateData();
+		}
+	}
+
+	onClickRefresh() {
 		this.updateData();
 	}
 
 	render() {
 		return (
-			<Row>
-				<Col>
-					<div
-						onClick={e => {
-							e.stopPropagation();
-						}}
-					>
-						<canvas id="myChart" ref={this.chartRef} />
-					</div>
-				</Col>
-			</Row>
+			<Container>
+				<Row>
+					<Col>
+						<Row>
+							<Button size="sm" onClick={this.onClickRefresh.bind(this)}>
+								<i className="fas fa-sync"></i>
+							</Button>
+						</Row>
+
+						<Row>
+							<Col>
+								<div
+									onClick={e => {
+										e.stopPropagation();
+									}}
+								>
+									<canvas id="myChart" ref={this.chartRef} />
+								</div>
+							</Col>
+						</Row>
+					</Col>
+				</Row>
+
+				<Row>
+					<Col>
+						<Row>
+							<h4>{this.state.totalVisitCount}</h4>
+						</Row>
+						<Row>Total visits</Row>
+					</Col>
+					<Col>
+						<Row>
+							<h4>{this.state.timeSpanVisitCount}</h4>
+						</Row>
+						<Row>
+							Visits this{' '}
+							{' ' +
+								(this.props.timeSpan === 'last30days'
+									? '30 Day Period'
+									: this.props.timeSpan)}
+						</Row>
+					</Col>
+					<Col>
+						<Row>
+							<h4>
+								{this.state.visitGrowth}%
+								{this.state.visitGrowth !== 0 ? (this.state.visitGrowth > 0 ? (
+									<i className="fas fa-long-arrow-alt-up arrow-green"></i>
+								) : (
+									<i className="fas fa-long-arrow-alt-down arrow-red"></i>
+								)) : ''}
+							</h4>
+						</Row>
+						<Row>Growth Over Previous Period</Row>
+					</Col>
+				</Row>
+			</Container>
 		);
 	}
 }
