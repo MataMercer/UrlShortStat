@@ -108,7 +108,6 @@ var UrlsPosts = {
       var currentDate = date ? new Date(date) : new Date();
       var lowerBoundDate;
       var upperBoundDate;
-      var format;
 
       switch (timeSpan) {
         case 'month':
@@ -116,20 +115,17 @@ var UrlsPosts = {
 
           upperBoundDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - unitsBackInTime + 1, 1); //first of next month
 
-          format = 'MM/DD/YYYY';
           break;
 
         case 'year':
           lowerBoundDate = new Date(currentDate.getFullYear() - unitsBackInTime, 0, 1);
           upperBoundDate = new Date(currentDate.getFullYear() + 1 - unitsBackInTime, 0, 1);
-          format = 'MM/YYYY';
           break;
 
         default:
           //last 30 days
           upperBoundDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1 - 30 * unitsBackInTime);
           lowerBoundDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 30 * (unitsBackInTime + 1));
-          format = 'MM/DD/YYYY';
       }
 
       _models["default"].Visit.findAndCountAll({
@@ -139,7 +135,12 @@ var UrlsPosts = {
         }
       }).then(function (visits) {
         var cleanedVisits = visits.rows.map(function (visit) {
-          return (0, _moment["default"])(visit.get('createdAt')).format(format);
+          //convert visits to a date with just year, month, and day. no hours.
+          if (timeSpan === 'year') {
+            return new Date(visit.get('createdAt').getFullYear(), visit.get('createdAt').getMonth(), 1).toJSON();
+          } else {
+            return new Date(visit.get('createdAt').getFullYear(), visit.get('createdAt').getMonth(), visit.get('createdAt').getDate()).toJSON();
+          }
         });
         var dateToVisitCount = {};
 

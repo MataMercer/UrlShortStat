@@ -78,7 +78,6 @@ const UrlsPosts = {
             const currentDate = date ? new Date(date) : new Date();
             let lowerBoundDate;
             let upperBoundDate;
-            let format;
             switch (timeSpan) {
                 case 'month':
                     lowerBoundDate = new Date(
@@ -91,7 +90,6 @@ const UrlsPosts = {
                         currentDate.getMonth() - unitsBackInTime + 1,
                         1
                     ); //first of next month
-                    format = 'MM/DD/YYYY';
                     break;
                 case 'year':
                     lowerBoundDate = new Date(
@@ -104,7 +102,6 @@ const UrlsPosts = {
                         0,
                         1
                     );
-                    format = 'MM/YYYY';
                     break;
                 default:
                     //last 30 days
@@ -118,7 +115,6 @@ const UrlsPosts = {
                         currentDate.getMonth(),
                         currentDate.getDate() - 30 * (unitsBackInTime + 1) 
                     );
-                    format = 'MM/DD/YYYY';
             }
  
             models.Visit.findAndCountAll({
@@ -130,8 +126,14 @@ const UrlsPosts = {
                     },
                 },
             }).then(visits => {
-                const cleanedVisits = visits.rows.map(visit =>
-                    moment(visit.get('createdAt')).format(format)
+                const cleanedVisits = visits.rows.map(visit =>{
+                    //convert visits to a date with just year, month, and day. no hours.
+                    if(timeSpan==='year'){
+                        return new Date(visit.get('createdAt').getFullYear(), visit.get('createdAt').getMonth(), 1 ).toJSON();
+                    }else{
+                        return new Date(visit.get('createdAt').getFullYear(), visit.get('createdAt').getMonth(), visit.get('createdAt').getDate() ).toJSON();
+                    } 
+                }
                 );
                 let dateToVisitCount = {};
                 for (let i = 0; i < cleanedVisits.length; i++) {

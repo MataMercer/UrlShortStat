@@ -54,6 +54,14 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 
 				//change the format of the response to match the format for plotting on chartjs
 				let dataPointsRes = res.data.dataPoints;
+
+				//format the keys into our clients local time. 
+				let dataPointsResTemp: {[key:string]: number} = {};
+				for(let key in dataPointsRes){
+					dataPointsResTemp[moment(new Date(key)).format('MM/DD/YYYY')] = dataPointsRes[key];
+				}
+				dataPointsRes = dataPointsResTemp;
+
 				let dataPoints: { [key: string]: number } = {};
 
 				//fill data with 0s
@@ -123,14 +131,11 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 							const formattedDate = moment(date)
 								.format(format)
 								.toString();
-							//the server still goes by this format in its response. MM/YYYY
-							const resFormattedDate = moment(date)
-								.format('MM/YYYY')
-								.toString();
-							if (!(resFormattedDate in dataPointsRes)) {
+				
+							if (!(formattedDate in dataPointsRes)) {
 								dataPoints[formattedDate] = 0;
 							} else {
-								dataPoints[formattedDate] = dataPointsRes[resFormattedDate];
+								dataPoints[formattedDate] = dataPointsRes[formattedDate];
 							}
 						}
 
@@ -239,6 +244,24 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 			},
 			options: {
 				maintainAspectRatio: false,
+				tooltips:{
+					callbacks:{
+						title: function(tooltipItem, data){
+							if(!data.labels || !tooltipItem[0].index || !tooltipItem[0] || !tooltipItem){
+								return '';
+							}
+
+							if(tooltipItem.length > 1){
+								const label:string = data.labels[tooltipItem[0].index] as string;
+								return `Current: ${label.split(';')[0]} Previous: ${label.split(';')[1]}`
+							}
+							console.log(tooltipItem);
+							const label:string = data.labels[tooltipItem[0].index] as string;
+							
+							return label.split(';')[tooltipItem[0!]!.datasetIndex!];
+						}
+					}
+				},
 				scales: {
 					xAxes: [
 						{
@@ -307,11 +330,6 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 			return;
 		}
 
-		// console.log(analytics);
-		// this.state.chart.data.datasets.forEach((dataset:Chart.ChartDataSets) => {
-		//     dataset.data.pop();
-		//     dataset.data = analytics.data;
-		// });
 
 		this.state.chart.data.labels = this.getLabels(analytics, analyticsPrev);
 		const dateFormat =
@@ -391,7 +409,7 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 		this.setState({
 			timeSpanVisitCount: analytics.timeSpanVisitCount,
 			totalVisitCount: analytics.totalVisitCount,
-			visitGrowth: Number.isNaN(growthPercent) ? 0 : growthPercent,
+			visitGrowth: Number.isNaN(growthPercent) ? 0 : Math.round(growthPercent),
 		});
 	}
 
