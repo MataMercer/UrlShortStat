@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -9,7 +11,7 @@ exports["default"] = void 0;
 
 var _api = _interopRequireDefault(require("./api"));
 
-var _express = require("express");
+var _express = _interopRequireWildcard(require("express"));
 
 var _users = _interopRequireDefault(require("../controllers/users"));
 
@@ -23,7 +25,7 @@ app.get('/u/:code', _users["default"].get.shortUrlRedirect); // Serve static ass
 
 if (process.env.NODE_ENV === 'production') {
   //Set static folder
-  app.use(express["static"]('./../../client/build'));
+  app.use(_express["default"]["static"]('./../../client/build'));
   app.get('*', function (req, res) {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
   });

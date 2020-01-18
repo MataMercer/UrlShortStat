@@ -1,5 +1,5 @@
 import apiRoutes from "./api";
-import {Router} from "express";
+import express, {Router} from "express";
 import usersControllers from '../controllers/users';
 import ensureAuthenticated from '../auth/auth';
 const app = Router();
