@@ -1,13 +1,8 @@
-#!/usr/bin/env node
-
-/**
- * Module dependencies.
- */
 "use strict";
 
-var _app = _interopRequireDefault(require("./app"));
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+var _app = _interopRequireDefault(require("./app"));
 
 var debug = require('debug')('express-sequelize');
 

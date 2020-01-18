@@ -1,9 +1,13 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
 var _models = _interopRequireDefault(require("../../models"));
 
@@ -15,15 +19,14 @@ var _sequelize = require("sequelize");
 
 var _moment = _interopRequireDefault(require("moment"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 var UrlsPosts = {
   createUrl: function createUrl(req, res) {
     var _req$body = req.body,
         originalUrl = _req$body.originalUrl,
-        customUrl = _req$body.customUrl;
+        code = _req$body.code;
+    var customUrl = code;
+    console.log(customUrl);
+    console.log(originalUrl);
 
     if (_validUrl["default"].isUri(originalUrl)) {
       try {
@@ -124,15 +127,15 @@ var UrlsPosts = {
 
         default:
           //last 30 days
-          upperBoundDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1);
-          lowerBoundDate = new Date(upperBoundDate.getFullYear(), upperBoundDate.getMonth(), upperBoundDate.getDate() - 30);
+          upperBoundDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1 - 30 * unitsBackInTime);
+          lowerBoundDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 30 * (unitsBackInTime + 1));
           format = 'MM/DD/YYYY';
       }
 
       _models["default"].Visit.findAndCountAll({
         where: {
           UrlCode: code,
-          createdAt: (_createdAt = {}, _defineProperty(_createdAt, _sequelize.Op.lt, upperBoundDate), _defineProperty(_createdAt, _sequelize.Op.gte, lowerBoundDate), _createdAt)
+          createdAt: (_createdAt = {}, (0, _defineProperty2["default"])(_createdAt, _sequelize.Op.lt, upperBoundDate), (0, _defineProperty2["default"])(_createdAt, _sequelize.Op.gte, lowerBoundDate), _createdAt)
         }
       }).then(function (visits) {
         var cleanedVisits = visits.rows.map(function (visit) {

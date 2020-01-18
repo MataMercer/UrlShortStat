@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -17,9 +19,9 @@ var _bodyParser = _interopRequireDefault(require("body-parser"));
 
 var _passport = _interopRequireDefault(require("passport"));
 
-var _routes = _interopRequireDefault(require("./routes"));
+var _cors = _interopRequireDefault(require("cors"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+var _routes = _interopRequireDefault(require("./routes"));
 
 //npm modules
 require('./auth/passport')(_passport["default"]);
@@ -28,10 +30,6 @@ var SequelizeSessionStore = require('connect-session-sequelize')(_expressSession
 
 var models = require('./models');
 
-var path = require('path');
-
-var cors = require('cors');
-
 //set db for sessions
 var mySessionStore = new SequelizeSessionStore({
   db: models.sequelize
@@ -39,7 +37,7 @@ var mySessionStore = new SequelizeSessionStore({
 
 var app = (0, _express["default"])();
 app.use((0, _helmet["default"])());
-app.use(cors({
+app.use((0, _cors["default"])({
   credentials: true,
   origin: 'http://localhost:3000'
 })); // add & configure middleware

@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -13,8 +15,6 @@ var _users = _interopRequireDefault(require("../controllers/users"));
 
 var _auth = _interopRequireDefault(require("../auth/auth"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
 var app = (0, _express.Router)(); // define all routes here.
 
 app.use('/api', _api["default"]); //short url redirector
@@ -23,7 +23,7 @@ app.get('/u/:code', _users["default"].get.shortUrlRedirect); // Serve static ass
 
 if (process.env.NODE_ENV === 'production') {
   //Set static folder
-  app.use(express["static"]('./client/build'));
+  app.use(express["static"]('./../../client/build'));
   app.get('*', function (req, res) {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
   });

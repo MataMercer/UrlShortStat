@@ -1,13 +1,13 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
 
 var _models = _interopRequireDefault(require("../../models"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 var UrlsDeletions = {
   urlDelete: function urlDelete(req, res) {
@@ -16,7 +16,10 @@ var UrlsDeletions = {
         if (url) {
           if (url.get('UserId') === req.user.dataValues.id) {
             url.destroy();
-            return res.json('url deleted');
+            return res.send({
+              message: 'you have successfully deleted the url.',
+              code: req.params.code
+            });
           } else {
             return res.status(403).json('Forbidden access');
           }

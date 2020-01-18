@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -8,8 +10,6 @@ exports["default"] = void 0;
 var _models = _interopRequireDefault(require("../../models"));
 
 var _validUrl = _interopRequireDefault(require("valid-url"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 var UrlsPuts = {
   editUrl: function editUrl(req, res) {
@@ -33,7 +33,7 @@ var UrlsPuts = {
                   }
                 }).then(function () {
                   return res.send({
-                    message: 'you have successfully registered a new url.',
+                    message: 'you have successfully edited the url.',
                     code: code,
                     originalUrl: originalUrl
                   });
