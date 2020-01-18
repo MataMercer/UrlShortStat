@@ -27,7 +27,7 @@ app.get('/u/:code', _users["default"].get.shortUrlRedirect); // Serve static ass
 
 if (process.env.NODE_ENV === 'production') {
   //Set static folder
-  app.use('../../client/build', _express["default"]["static"]('../../client/build'));
+  app.use(_express["default"]["static"](path.join(__dirname, '../../client/build')));
   app.get('*', function (req, res) {
     res.sendFile(path.resolve(__dirname, '..', '..', 'client', 'build', 'index.html'));
   });
