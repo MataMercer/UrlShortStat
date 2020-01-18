@@ -17,7 +17,7 @@ var _users = _interopRequireDefault(require("../controllers/users"));
 
 var _auth = _interopRequireDefault(require("../auth/auth"));
 
-var _config = _interopRequireDefault(require("config"));
+var path = require('path');
 
 var app = (0, _express.Router)(); // define all routes here.
 
@@ -29,7 +29,7 @@ if (process.env.NODE_ENV === 'production') {
   //Set static folder
   app.use(_express["default"]["static"]('./../../client/build'));
   app.get('*', function (req, res) {
-    res.sendFile(_config["default"].resolve(__dirname, 'client', 'build', 'index.html'));
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
   });
 }
 

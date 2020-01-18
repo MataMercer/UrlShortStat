@@ -2,7 +2,7 @@ import apiRoutes from "./api";
 import express, {Router} from "express";
 import usersControllers from '../controllers/users';
 import ensureAuthenticated from '../auth/auth';
-import path from 'config';
+const path = require('path');
 const app = Router();
 
 // define all routes here.
