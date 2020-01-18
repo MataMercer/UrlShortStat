@@ -104,7 +104,8 @@ var UrlsPosts = {
           timeSpan = _req$body2.timeSpan,
           unitsBackInTime = _req$body2.unitsBackInTime,
           code = _req$body2.code,
-          date = _req$body2.date;
+          date = _req$body2.date,
+          userTimeZone = _req$body2.userTimeZone;
       var currentDate = date ? new Date(date) : new Date();
       var lowerBoundDate;
       var upperBoundDate;
@@ -139,7 +140,7 @@ var UrlsPosts = {
         }
       }).then(function (visits) {
         var cleanedVisits = visits.rows.map(function (visit) {
-          return (0, _moment["default"])(visit.get('createdAt')).format(format);
+          return userTimeZone ? (0, _moment["default"])(visit.get('createdAt')).tz(userTimeZone).format(format) : (0, _moment["default"])(visit.get('createdAt')).format(format);
         });
         var dateToVisitCount = {};
 

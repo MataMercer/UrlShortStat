@@ -10,6 +10,7 @@ import { AppState } from '../store';
 import { Analytics } from '../types/Url';
 axios.defaults.withCredentials = true;
 var moment = require('moment');
+var momentTz = require('moment-timezone');
 
 type UrlAnalyticsProps = {
 	code: string;
@@ -45,6 +46,7 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 			unitsBackInTime: unitsBackInTime,
 			timeSpanVisitCount: 0,
 			totalVisitCount: 0,
+			userTimeZone: momentTz.tz.guess()
 		};
 		return axios
 			.post(config.serverUrl + '/api/url/analytics/', body)

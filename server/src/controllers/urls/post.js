@@ -73,7 +73,7 @@ const UrlsPosts = {
     //this under post bc get doesnt allow json attachments
     analyze(req, res){
         try {
-            const { timeSpan, unitsBackInTime, code, date } = req.body;
+            const { timeSpan, unitsBackInTime, code, date, userTimeZone } = req.body;
     
             const currentDate = date ? new Date(date) : new Date();
             let lowerBoundDate;
@@ -131,7 +131,7 @@ const UrlsPosts = {
                 },
             }).then(visits => {
                 const cleanedVisits = visits.rows.map(visit =>
-                    moment(visit.get('createdAt')).format(format)
+                    userTimeZone? moment(visit.get('createdAt')).tz(userTimeZone).format(format) : moment(visit.get('createdAt')).format(format)
                 );
                 let dateToVisitCount = {};
                 for (let i = 0; i < cleanedVisits.length; i++) {
