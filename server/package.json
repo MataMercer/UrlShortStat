@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon --exec babel-node ./src/index.js --delay 2.2",
     "build": "./node_modules/.bin/babel ./src --out-dir dist",
-    "start": "npm run build && node dist/index.js",
+    "start": "node dist/index.js",
     "test": "npm run test-integration",
     "test-integration": "cross-env NODE_ENV=test ./node_modules/.bin/mocha  test/integration/*.test.js --require @babel/register --exit",
     "test-integration-url": "cross-env NODE_ENV=test mocha --compilers js:@babel/register test/integration/url.test.js --require @babel/register --exit",

@@ -1,4 +1,3 @@
 /server/node_modules
-/server/dist
 /server/.vscode
 /server/client/node_modules
