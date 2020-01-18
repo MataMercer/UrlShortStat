@@ -78,19 +78,10 @@ class Login extends React.Component<Props, LoginState> {
 		if(this.props.errors.length>0){
 			this.setState({errors: this.props.errors})
 		}
-		// if (error) {
-		// 	try {
-		// 		this.setState({ formErrorMessages: [error.response.data] });
-		// 	} catch (error) {
-		// 		this.setState({
-		// 			formErrorMessages: ['Unable to connect to server.'],
-		// 		});
-		// 	}
-		// }
 
 	};
 	render() {
-		const { from } = this.props.location.state || { from: { pathname: '/' } };
+		const { from } = this.props.location.state || { from: { pathname: '/dashboard' } };
 
 		if (this.props.name) {
 			return <Redirect to={from} />;

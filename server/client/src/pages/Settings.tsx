@@ -125,6 +125,8 @@ class Settings extends React.Component<Props, SettingsState> {
 		//redir
 		if (this.props.errors.length > 0) {
 			this.setState({ errors: this.props.errors });
+		}else{
+			this.setState({showNameInput: false, showEmailInput: false, showPasswordInput: false})
 		}
 	};
 

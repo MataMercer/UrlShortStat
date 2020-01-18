@@ -384,8 +384,7 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 
 		const growthPercent =
 			((analytics.timeSpanVisitCount - analyticsPrev.timeSpanVisitCount) /
-				((analytics.timeSpanVisitCount + analyticsPrev.timeSpanVisitCount) /
-					2)) *
+				(analytics.timeSpanVisitCount + analyticsPrev.timeSpanVisitCount)) *
 			100;
 
 		this.state.chart.update();
