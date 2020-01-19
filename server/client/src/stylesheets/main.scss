@@ -69,6 +69,7 @@
 #navbar {
 	background-color: $url-list-item-color;
 	position: fixed;
+	z-index: 9999999;
 	top: 0px;
 	width: 100%;
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
