@@ -1,3 +1,4 @@
 /server/node_modules
 /server/.vscode
 /server/client/node_modules
+/server/client/build

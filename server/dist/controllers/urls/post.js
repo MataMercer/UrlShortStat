@@ -129,7 +129,7 @@ var UrlsPosts = {
         default:
           //last 30 days
           upperBoundDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1 - 30 * unitsBackInTime);
-          lowerBoundDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 30 * (unitsBackInTime + 1));
+          lowerBoundDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 30 * (unitsBackInTime + 1) + 1);
           format = 'MM/DD/YYYY';
       }
 

@@ -116,7 +116,7 @@ const UrlsPosts = {
                     lowerBoundDate = new Date(
                         currentDate.getFullYear(),
                         currentDate.getMonth(),
-                        currentDate.getDate() - 30 * (unitsBackInTime + 1) 
+                        currentDate.getDate() - 30 * (unitsBackInTime + 1) + 1 
                     );
                     format = 'MM/DD/YYYY';
             }
