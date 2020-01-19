@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-// import logo from './logo.svg';
-import 'axios-progress-bar/dist/nprogress.css';
 import './stylesheets/main.scss';
-// import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import AppNavbar from './components/AppNavbar';
 import Routes from './routes/Routes';
 import { connect } from 'react-redux';
-import { checkUserSession, startCheckUserSession } from './actions/userActions';
+import { startCheckUserSession } from './actions/userActions';
 import { Spinner, Container } from 'reactstrap';
 import { AppState } from './store';
 import { AppActions } from './types/actions';
