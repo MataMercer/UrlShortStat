@@ -1,6 +1,6 @@
 {
-  "short_name": "CloseWeUI",
-  "name": "The front-end UI for CloseWe",
+  "short_name": "Url Short Stat",
+  "name": "Client for Url-Short-Stat",
   "icons": [],
   "start_url": ".",
   "display": "standalone",

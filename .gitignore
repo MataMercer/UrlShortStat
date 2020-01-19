@@ -2,3 +2,4 @@
 /server/.vscode
 /server/client/node_modules
 /server/client/build
+/server/dist
