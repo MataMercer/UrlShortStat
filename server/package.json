@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec babel-node ./src/index.js --delay 2.2",
-    "build": "./node_modules/.bin/babel ./src --out-dir dist && cd client && npm run build && cd ../",
+    "build": "./node_modules/.bin/babel ./src --out-dir dist && cd client  && npm install && npm run build && cd ../",
     "build-server": "./node_modules/.bin/babel ./src --out-dir dist",
     "start": "node dist/index.js",
     "test": "npm run test-integration",
