@@ -9,8 +9,7 @@ class Home extends React.Component {
 				<Jumbotron>
 					<h1 className="display-3 text-center">Shorten URLs. With Style.</h1>
 					<p className="lead text-center">
-						View analytics for shortened URLs, create custom URLs. Up to 100
-						entries for free.
+						View analytics for shortened URLs, create custom URLs. For free.
 					</p>
 
 					<p className="lead text-center">

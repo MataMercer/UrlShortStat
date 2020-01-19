@@ -1,14 +1,4 @@
-$font-stack: Helvetica, sans-serif;
-$primary-color: #527474;
-$custom-border-radius: 10px;
-$primary: #09d3ac;
-$navbar-padding-y: 0.2rem;
-$navlink-padding-y: 0rem;
-$navbar-brand-padding-y: 0 rem;
-$btn-border-radius: $custom-border-radius;
-$modal-content-border-radius: $custom-border-radius;
-$url-list-item-color: rgb(240, 240, 240);
-$loading-bar-z-index: 1031;
+
 @import 'custom-variables';
 @import '../../node_modules/bootstrap/scss/bootstrap';
 @import 'custom-styles';
@@ -28,15 +18,11 @@ $loading-bar-z-index: 1031;
 	color: white;
 	background-color: $primary-color;
 	border-radius: 4rem;
-	// padding: 0.4rem 0.8rem 0.4rem ;
-	// text-decoration: underline;
 }
 
 .current-nav-link:hover {
 	text-decoration: none;
 	color: white;
-	// padding: 0.4rem 0.8rem 0.4rem ;
-	// text-decoration: underline;
 }
 
 .url-list-item {
@@ -127,10 +113,6 @@ $loading-bar-z-index: 1031;
 	min-width: 250px;
 }
 
-// loading bar
-#nprogress .bar {
-	background: $primary;
-}
 
 .arrow-red{
 	color:red;

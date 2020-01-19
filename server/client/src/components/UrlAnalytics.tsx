@@ -46,7 +46,7 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 			unitsBackInTime: unitsBackInTime,
 			timeSpanVisitCount: 0,
 			totalVisitCount: 0,
-			userTimeZone: momentTz.tz.guess()
+			userTimeZone: momentTz.tz.guess(),
 		};
 		return axios
 			.post(config.serverUrl + '/api/url/analytics/', body)
@@ -309,12 +309,6 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 			return;
 		}
 
-		// console.log(analytics);
-		// this.state.chart.data.datasets.forEach((dataset:Chart.ChartDataSets) => {
-		//     dataset.data.pop();
-		//     dataset.data = analytics.data;
-		// });
-
 		this.state.chart.data.labels = this.getLabels(analytics, analyticsPrev);
 		const dateFormat =
 			this.props.timeSpan === 'year' ? 'MMM YYYY' : 'MMM DD, YYYY';
@@ -393,7 +387,7 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 		this.setState({
 			timeSpanVisitCount: analytics.timeSpanVisitCount,
 			totalVisitCount: analytics.totalVisitCount,
-			visitGrowth: Number.isNaN(growthPercent) ? 0 : growthPercent,
+			visitGrowth: Number.isNaN(growthPercent) ? 0 : Math.round(growthPercent),
 		});
 	}
 
@@ -466,11 +460,15 @@ class UrlAnalytics extends React.Component<Props, UrlAnalyticsState> {
 						<Row>
 							<h4>
 								{this.state.visitGrowth}%
-								{this.state.visitGrowth !== 0 ? (this.state.visitGrowth > 0 ? (
-									<i className="fas fa-long-arrow-alt-up arrow-green"></i>
+								{this.state.visitGrowth !== 0 ? (
+									this.state.visitGrowth > 0 ? (
+										<i className="fas fa-long-arrow-alt-up arrow-green"></i>
+									) : (
+										<i className="fas fa-long-arrow-alt-down arrow-red"></i>
+									)
 								) : (
-									<i className="fas fa-long-arrow-alt-down arrow-red"></i>
-								)) : ''}
+									''
+								)}
 							</h4>
 						</Row>
 						<Row>Growth Over Previous Period</Row>

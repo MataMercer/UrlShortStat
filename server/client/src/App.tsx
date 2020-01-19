@@ -9,7 +9,6 @@ import Routes from './routes/Routes';
 import { connect } from 'react-redux';
 import { checkUserSession, startCheckUserSession } from './actions/userActions';
 import { Spinner, Container } from 'reactstrap';
-// import { loadProgressBar } from 'axios-progress-bar'
 import { AppState } from './store';
 import { AppActions } from './types/actions';
 import { ThunkDispatch } from 'redux-thunk';
@@ -27,7 +26,6 @@ class App extends Component<Props, AppCompState> {
 	render() {
 		return (
 			<div className="App">
-				{/* {loadProgressBar({ showSpinner: false })} */}
 				<AppNavbar />
 				{this.props.loading ? (
 					<Spinner />
